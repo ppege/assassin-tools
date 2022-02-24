@@ -1,1 +1,64 @@
-Hello World!
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Assassin searcher</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer"/>
+  <link rel="stylesheet" type="text/css" href="static/styles/main.css">
+  <link rel="stylesheet" type="text/css" id="dark-css" href="static/styles/dark.css">
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+</head>
+<body>
+  <section class="hero is-fullheight" id="hero">
+    <!-- Hero content: will be in the middle -->
+    <div class="section">
+      <div class="container">
+        <div class="card">
+          <header class="card-header has-background-danger">
+            <p class="card-header-title">
+              Input
+            </p>
+          </header>
+          <div class="card-content">
+            <div class="content">
+              <div class="field">
+                <p class="control">
+                  <input class="input" type="text" id="knifeInput" placeholder="Knife name">
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <script src="static/scripts/searcher.js"></script>
+
+        <div class="card">
+          <header class="card-header has-background-danger">
+            <p class="card-header-title">
+              Knife info
+            </p>
+          </header>
+          <div class="card-content">
+            <div class="content" id="outputCard">
+              <table>
+                <tr>
+                  <th>NAME</th>
+                  <th>DEMAND</th>
+                  <th>VALUE</th>
+                  <th>HOW TO OBTAIN</th>
+                  <th>ORIGIN</th>
+                </tr>
+                <tr>
+                  <th id="name">UNDEFINED</th>
+                  <th id="demand">UNDEFINED</th>
+                  <th id="value">UNDEFINED</th>
+                  <th id="obtain">UNDEFINED</th>
+                  <th id="origin">UNDEFINED</th>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</body>
