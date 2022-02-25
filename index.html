@@ -2,7 +2,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Assassin searcher</title>
+  <title>Assassin Value Searcher</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer"/>
   <link rel="stylesheet" type="text/css" href="static/styles/main.css">
   <link rel="stylesheet" type="text/css" id="dark-css" href="static/styles/dark.css">
@@ -16,7 +16,7 @@
         <div class="card">
           <header class="card-header has-background-danger">
             <p class="card-header-title">
-              Input
+              Assassin Value Searcher
             </p>
           </header>
           <div class="card-content">
@@ -26,20 +26,7 @@
                   <input class="input" type="text" id="knifeInput" placeholder="Knife name">
                 </p>
               </div>
-            </div>
-          </div>
-        </div>
-        <script src="static/scripts/searcher.js"></script>
-
-        <div class="card">
-          <header class="card-header has-background-danger">
-            <p class="card-header-title">
-              Knife info
-            </p>
-          </header>
-          <div class="card-content">
-            <div class="content" id="outputCard">
-              <table>
+              <table class="table" id="valuetable">
                 <tr>
                   <th>NAME</th>
                   <th>DEMAND</th>
@@ -47,17 +34,12 @@
                   <th>HOW TO OBTAIN</th>
                   <th>ORIGIN</th>
                 </tr>
-                <tr>
-                  <th id="name">UNDEFINED</th>
-                  <th id="demand">UNDEFINED</th>
-                  <th id="value">UNDEFINED</th>
-                  <th id="obtain">UNDEFINED</th>
-                  <th id="origin">UNDEFINED</th>
-                </tr>
               </table>
             </div>
+            <h2 class="subtitle is-6">Powered by <a target="_blank" href="https://viggoscrape.xyz/api/v2/assassin?name=Neptune">homemade Assassin value API</a>, created by <a target="_blank" href="https://github.com/nangurepo">Nangu</a></h2>
           </div>
         </div>
+        <script src="static/scripts/searcher.js"></script>
       </div>
     </div>
   </section>
