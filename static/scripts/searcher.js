@@ -17,7 +17,7 @@ $input.on('keydown', function () {
 function doneTyping() {
     $('#valuetable').find('tr:gt(0)').remove();
     let input = $('#knifeInput').val();
-    fetch('https://viggoscrape.nangurepo.com/api/v2/assassin?name=' + input)
+    fetch('https://api.nangurepo.com/api/v2/assassin?name=' + input)
     .then(response => response.json())
     .then(data => {
         data.forEach(function(knife) {
