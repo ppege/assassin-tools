@@ -1,18 +1,18 @@
 function addItem(name1, side) {
   let name = name1.toUpperCase().replace(/ /g,"_");
   let panel = $("#" + side);
-  if (panel.children().length === 6) {
-    $("#warningtext").html("Max. 6 items per offer! Don't get scammed.");
-    setTimeout(function() {
-      $("#warningtext").empty();
-    }, 5000)
-    return;
-  }
   if ($(`#${side} #${name}`).length !== 0) {
     let amount = $(`#${side} #${name}`).attr("amount");
     $(`#${side} #${name}`).attr("amount", parseInt(amount)+1);
     $(`#${side} #${name}_amount`).html(parseInt(amount)+1);
     updateResult();
+    return;
+  }
+  if (panel.children().length === 6) {
+    $("#warningtext").html("Max. 6 items per offer! Don't get scammed.");
+    setTimeout(function() {
+      $("#warningtext").empty();
+    }, 5000)
     return;
   }
   panel.append(
