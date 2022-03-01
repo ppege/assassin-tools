@@ -1,3 +1,7 @@
+$("#clearTrade").click(function() {
+  $("#left, #right, #statContent").empty()
+})
+
 function addItem(name1, side) {
   let name = name1.toUpperCase().replace(/ /g,"_");
   let panel = $("#" + side);
