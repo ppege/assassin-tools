@@ -59,7 +59,11 @@ function updateResult() {
       </div>
       `
     );
-  }
+  };
+  if ($("#left").html() === "" || $("#right").html() === "") {
+    $("#statContent").empty();
+    return;
+  };
   Promise.all([getValues('left'), getValues('right')])
   .then(data => {
     let leftValue = 0;
@@ -68,34 +72,30 @@ function updateResult() {
     let leftDemandW = "NO!";
     let rightValue = 0;
     let rightDemandInfo = [0, 0];
-    try {
-      data[0].forEach((item) => {
-        leftValue += parseInt(item['VALUE']);
-        leftDemandInfo[0] += parseInt(item['DEMANDNUMBER']);
-        leftDemandInfo[1]++;
-      });
-      data[1].forEach((item) => {
-        rightValue += parseInt(item['VALUE'])
-        rightDemandInfo[0] += parseInt(item['DEMANDNUMBER']);
-        rightDemandInfo[1]++;
-      });
-      var leftAverageDemand = leftDemandInfo[0]/leftDemandInfo[1];
-      var rightAverageDemand = rightDemandInfo[0]/rightDemandInfo[1];
-      if (leftValue < rightValue) {
-        leftValueW= "YES!";
-      };
-      if (leftAverageDemand < rightAverageDemand) {
-        leftDemandW = "YES!";
-      };
-      if (leftValue == rightValue) {
-        leftValueW= "EVEN!";
-      };
-      if (leftAverageDemand == rightAverageDemand) {
-        leftDemandW = "EVEN!";
-      };
-    } catch {
-      $("#statContent").empty();
+    data[0].forEach((item) => {
+      leftValue += item['EXOTICVALUE'];
+      leftDemandInfo[0] += parseInt(item['DEMANDNUMBER']);
+      leftDemandInfo[1]++;
+    });
+    data[1].forEach((item) => {
+      rightValue += item['EXOTICVALUE'];
+      rightDemandInfo[0] += parseInt(item['DEMANDNUMBER']);
+      rightDemandInfo[1]++;
+    });
+    var leftAverageDemand = leftDemandInfo[0]/leftDemandInfo[1];
+    var rightAverageDemand = rightDemandInfo[0]/rightDemandInfo[1];
+    if (leftValue < rightValue) {
+      leftValueW = "YES!";
     };
+    if (leftAverageDemand < rightAverageDemand) {
+      leftDemandW = "YES!";
+    };
+    if (leftValue == rightValue) {
+      leftValueW = "EVEN!";
+    };
+    if (leftAverageDemand == rightAverageDemand) {
+      leftDemandW = "EVEN!";
+    }
     $("#statContent").html(
       `
         <table class="table" id="stattable">
@@ -106,9 +106,9 @@ function updateResult() {
             <th>W FOR YOU?</th>
           </tr>
           <tr>
-            <th>Value</th>
-            <th>${leftValue}</th>
-            <th>${rightValue}</th>
+            <th>Exotic Value</th>
+            <th>${leftValue.toFixed(3)}</th>
+            <th>${rightValue.toFixed(3)}</th>
             <th>${leftValueW}</th>
           </tr>
           <tr>
