@@ -1,5 +1,5 @@
 function addItem(name1, side) {
-  let name = name1.replace(/ /g,"_");
+  let name = name1.toUpperCase().replace(/ /g,"_");
   let panel = $("#" + side);
   if (panel.children().length === 6) {
     $("#warningtext").html("Max. 6 items per offer! Don't get scammed.");
@@ -16,7 +16,7 @@ function addItem(name1, side) {
     return;
   }
   panel.append(
-    `<div amount=1 data-tooltip="${name}" onclick="removeItem('${name}', '${side}')" id="${name}" class="tile is-child has-tooltip-bottom is-2"><img height=128 width=128 src="images/${name}.png"><p class="has-text-centered" id="${name}_amount"></p></div>`
+    `<div amount=1 data-tooltip="${name1}" onclick="removeItem('${name}', '${side}')" id="${name}" class="tile is-child has-tooltip-bottom is-2"><img height=128 width=128 src="images/${name}.png"><p class="has-text-centered" id="${name}_amount"></p></div>`
   );
   updateResult();
 }
