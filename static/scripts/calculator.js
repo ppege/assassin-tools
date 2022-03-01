@@ -113,8 +113,8 @@ function updateResult() {
           </tr>
           <tr>
             <th>Average demand</th>
-            <th>${leftAverageDemand} stars</th>
-            <th>${rightAverageDemand} stars</th>
+            <th>${leftAverageDemand.toFixed(3)} stars</th>
+            <th>${rightAverageDemand.toFixed(3)} stars</th>
             <th>${leftDemandW}</th>
           </tr>
         </table>
