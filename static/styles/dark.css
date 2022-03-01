@@ -1,5 +1,6 @@
 /*! Bulma Prefers Dark  | MIT License | github.com/jloh/bulma-prefers-dark */
-@media (prefers-color-scheme: dark) {
+@media (prefers-color-scheme: dark)
+{
     html {
       background-color: #17181c;
     }

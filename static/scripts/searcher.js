@@ -15,13 +15,13 @@ $input.on('keydown', function () {
 });
 
 function doneTyping() {
-    $('#valuetable').find('tr:gt(0)').remove();
     let input = $('#knifeInput').val();
     fetch('https://api.nangurepo.com/v2/assassin?name=' + input)
     .then(response => response.json())
     .then(data => {
+        $('#valuetable').find('tr:gt(0)').remove();
         data.forEach(function(knife) {
-            $('#valuetable tr:last').after(
+            $('#valuetable').append(
                 `<tr><th><img width=96 height=96 src="images/${knife['NAME'].toUpperCase().replace(/ /g,"_")}.png"></th><th>${knife['NAME']}</th><th>${knife['DEMAND']}</th><th>${knife['VALUE']}</th><th>${knife['OBTAIN']}</th><th>${knife['ORIGIN']}</th><th><button class="button" onclick="addItem('${knife['NAME']}', 'left')">LEFT</button><button class="button" onclick="addItem('${knife['NAME']}', 'right')">RIGHT</button></th></tr>`
             );
         })
