@@ -27,17 +27,3 @@ function doneTyping() {
         })
     });
 }
-
-function addItem(name, side) {
-  let panel = $("#" + side)
-  if (panel.children().length === 6) {
-    return;
-  }
-  panel.append(
-    `<div data-tooltip="${name}" onclick="removeItem('${name.replace(/ /g,"_")}', '${side}')" id="${name.replace(/ /g,"_")}" class="tile is-child has-tooltip-bottom is-2"><img height=128 width=128 src="images/${name.replace(/ /g,"_")}.png"></div>`
-  )
-}
-
-function removeItem(name, side) {
-  $("#" + side + " #" + name + ":first").remove()
-}
