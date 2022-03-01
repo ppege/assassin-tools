@@ -16,7 +16,7 @@
         <div class="card">
           <header class="card-header has-background-danger">
             <p class="card-header-title">
-              Assassin Value Searcher
+              Value Searcher
             </p>
           </header>
           <div class="card-content">
@@ -34,13 +34,43 @@
                   <th>VALUE</th>
                   <th>HOW TO OBTAIN</th>
                   <th>ORIGIN</th>
+                  <th style="width:64px">ADD?</th>
                 </tr>
               </table>
             </div>
-            <h2 class="subtitle is-6">Powered by <a target="_blank" href="https://api.nangurepo.com/v2/assassin?name=Neptune">NanguRepo Assassin value API</a>, created by <a target="_blank" href="https://nangurepo.com">Nangu</a></h2>
+            <h2 class="subtitle is-6">Powered by <a target="_blank" href="https://api.nangurepo.com/v2/assassin?name=Skeleton%20King">NanguRepo Assassin value API</a>, created by <a target="_blank" href="https://nangurepo.com">Nangu</a></h2>
           </div>
         </div>
         <script src="static/scripts/searcher.js"></script>
+        <div class="block"></div>
+        <div class="card">
+          <header class="card-header has-background-danger">
+            <p class="card-header-title">
+              Trade Calculator
+            </p>
+            <button data-tooltip="Use this menu to calculate the gain/loss of a trade. Use the Value Searcher to find knives, and add them on the buttons labelled 'Left' and 'Right'. To remove an item, just click it." class="card-header-icon has-tooltip-multiline has-tooltip-left" aria-label="?">
+              <span class="icon">
+                <i class="fas fa-question-circle" aria-hidden="true"></i>
+              </span>
+            </button>
+          </header>
+          <div class="card-content">
+            <div class="columns">
+              <div class="column has-outline is-half">
+                <h1 class="title has-text-centered">Your Offer</h1>
+                <div class="box">
+                  <div id="left" class="tile is-ancestor"></div>
+                </div>
+              </div>
+              <div class="column is-half">
+                <h1 class="title has-text-centered">Their Offer</h1>
+                <div class="box">
+                  <div id="right" class="tile is-ancestor"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
