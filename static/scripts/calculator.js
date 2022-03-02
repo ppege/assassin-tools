@@ -1,6 +1,6 @@
 function addItem(name1, side) {
   let name = name1.toUpperCase().replace(/ /g,"_");
-  let panel = $("#" + side).last();
+  let panel = $("#" + side);
   if ($(`#${side} #${name}`).length !== 0) {
     let amount = $(`#${side} #${name}`).attr("amount");
     $(`#${side} #${name}`).attr("amount", parseInt(amount)+1);
@@ -16,7 +16,7 @@ function addItem(name1, side) {
     return;
   }
   panel.append(
-    `<div amount=1 data-tooltip="${name1}" onclick="removeItem('${name}', '${side}')" id="${name}" class="tile is-child has-tooltip-bottom is-2"><img height=128 width=128 src="images/${name}.png"><p class="has-text-centered" id="${name}_amount"></p></div>`
+    `<div amount=1 data-tooltip="${name1}" onclick="removeItem('${name}', '${side}')" id="${name}" class="tile knife is-child has-tooltip-bottom is-2"><button style="display:none" class="button show_on_hover">Add to trade</button><img height=128 width=128 src="images/${name}.png"><p class="has-text-centered" id="${name}_amount"></p></div>`
   );
   if (panel.children().length >= 6 && side === "inventory-row") {
     $("#inventoryContainer").append(
@@ -166,42 +166,4 @@ function getValues(side) {
     });
   })
   
-}
-
-function loadInventory() {
-  let code = $("#codeInput").val();
-  fetch('https://api.nangurepo.com/v2/assassin?read&code=' + code)
-  .then(response => response.json())
-  .then(data => {
-    if (data === "failure") {
-      $("#invwarning").html("No inventory found with code '" + code + "'");
-      setTimeout(function() {
-        $("#invwarning").empty();
-      }, 5000)
-      return;
-    }
-    $("#inventory-row").empty();
-    data.forEach(item => {
-      addItem(item, "inventory-row")
-    })
-  })
-}
-
-function saveInventory() {
-  let code = $("#codeInput").val();
-  var ids = $('#inventoryContainer').children().children().map(function(){
-    return $(this).attr('id');
-    }).get();
-  
-  ids.forEach(function(id) {
-    let amount = $(`#inventory-row #${id}`).attr("amount");
-    if (amount !== "1") {
-      for (var i = 1; i < amount; i++) {
-        ids.push(id);
-      }
-    }
-  })
-  let names = ids.join(",");
-
-  fetch('https://api.nangurepo.com/v2/assassin?write&code=' + code + "&name=" + names);
 }
