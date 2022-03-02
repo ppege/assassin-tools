@@ -82,6 +82,31 @@
           </div>
         </div>
         <script src="static/scripts/calculator.js"></script>
+        <div class="block"></div>
+        <div class="card">
+          <header class="card-header has-background-danger">
+            <p class="card-header-title">Inventory Manager</p>
+            <button data-tooltip="Use this menu to calculate your inventory value, and to make using the trading menu easier. Generate a code to see your inventory every time you open the site." class="card-header-icon has-tooltip-multiline has-tooltip-left" aria-label="?">
+              <span class="icon">
+                <i class="fas fa-boxes-stacked"></i>
+              </span>
+            </button>
+          </header>
+          <div class="card-content">
+            <div class="box" id="inventoryContainer">
+              <div id="inventory-row" class="tile is-ancestor"></div>
+            </div>
+            <div class="field control">
+              <input class="input" id="codeInput"></input>
+              <div class="buttons">
+                <button class="button is-link" onclick="loadInventory()">Load</button>
+                <button class="button is-primary" onclick="saveInventory()">Save</button>
+              </div>
+              <p id="invwarning" style="color:red;"></p>
+            </div>
+          </div>
+        </div>
+        <script src="static/scripts/calculator.js"></script>
       </div>
     </div>
   </section>

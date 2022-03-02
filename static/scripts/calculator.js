@@ -1,14 +1,14 @@
 function addItem(name1, side) {
   let name = name1.toUpperCase().replace(/ /g,"_");
-  let panel = $("#" + side);
+  let panel = $("#" + side).last();
   if ($(`#${side} #${name}`).length !== 0) {
     let amount = $(`#${side} #${name}`).attr("amount");
     $(`#${side} #${name}`).attr("amount", parseInt(amount)+1);
     $(`#${side} #${name}_amount`).html(parseInt(amount)+1);
-    updateResult();
+    updateResult(side);
     return;
   }
-  if (panel.children().length === 6) {
+  if (panel.children().length >= 6) {
     $("#warningtext").html("Max. 6 items per offer! Don't get scammed.");
     setTimeout(function() {
       $("#warningtext").empty();
@@ -18,7 +18,12 @@ function addItem(name1, side) {
   panel.append(
     `<div amount=1 data-tooltip="${name1}" onclick="removeItem('${name}', '${side}')" id="${name}" class="tile is-child has-tooltip-bottom is-2"><img height=128 width=128 src="images/${name}.png"><p class="has-text-centered" id="${name}_amount"></p></div>`
   );
-  updateResult();
+  if (panel.children().length >= 6 && side === "inventory-row") {
+    $("#inventoryContainer").append(
+      `<div id="inventory-row" class="tile is-ancestor"></div>`
+    );
+  }
+  updateResult(side);
 }
   
 function removeItem(name1, side) {
@@ -28,18 +33,21 @@ function removeItem(name1, side) {
     $(`#${side} #${name}`).attr("amount", parseInt(amount)-1);
     if (parseInt(amount)-1 === 1){
       $(`#${side} #${name}_amount`).empty();
-      updateResult();
+      updateResult(side);
       return;
     }
     $(`#${side} #${name}_amount`).html(parseInt(amount)-1);
-    updateResult();
+    updateResult(side);
     return;
   }
   $(`#${side} #${name}`).remove();
-  updateResult();
+  updateResult(side);
 }
 
-function updateResult() {
+function updateResult(side) {
+  if (side === "inventory-row") {
+    return;
+  }
   if ($("#tradeStats").length === 0) {
     $("#warningtext").after(
       `
@@ -95,7 +103,7 @@ function updateResult() {
     };
     if (leftAverageDemand == rightAverageDemand) {
       leftDemandW = "EVEN!";
-    }
+    };
     $("#statContent").html(
       `
         <table class="table" id="stattable">
@@ -128,6 +136,7 @@ function updateResult() {
 
 function getValues(side) {
   return new Promise(function(resolve, reject) {
+
     var ids = $('#' + side).children().map(function(){
       return $(this).attr('id');
       }).get();
@@ -157,4 +166,42 @@ function getValues(side) {
     });
   })
   
+}
+
+function loadInventory() {
+  let code = $("#codeInput").val();
+  fetch('https://api.nangurepo.com/v2/assassin?read&code=' + code)
+  .then(response => response.json())
+  .then(data => {
+    if (data === "failure") {
+      $("#invwarning").html("No inventory found with code '" + code + "'");
+      setTimeout(function() {
+        $("#invwarning").empty();
+      }, 5000)
+      return;
+    }
+    $("#inventory-row").empty();
+    data.forEach(item => {
+      addItem(item, "inventory-row")
+    })
+  })
+}
+
+function saveInventory() {
+  let code = $("#codeInput").val();
+  var ids = $('#inventoryContainer').children().children().map(function(){
+    return $(this).attr('id');
+    }).get();
+  
+  ids.forEach(function(id) {
+    let amount = $(`#inventory-row #${id}`).attr("amount");
+    if (amount !== "1") {
+      for (var i = 1; i < amount; i++) {
+        ids.push(id);
+      }
+    }
+  })
+  let names = ids.join(",");
+
+  fetch('https://api.nangurepo.com/v2/assassin?write&code=' + code + "&name=" + names);
 }
