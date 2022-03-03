@@ -42,6 +42,7 @@ function addToInventory(name1, mode) {
   );
   if (isOdd(clickIndex) === 1 && mode !== "load") {
     saveInventory();
+    updateStats();
   }
 }
 
@@ -73,9 +74,101 @@ function removeFromInventory(name1, mode) {
     return;
   }
   knife.remove();
+  updateStats();
   if (isOdd(clickIndex) === 1) {
     saveInventory();
   }
+}
+
+function updateStats() {
+  if ($("#invStats").length === 0) {
+    $("#statRow").html(
+      `
+        <div id="invStats" class="card">
+          <header class="card-header has-background-danger">
+            <p class="card-header-title">
+              Inventory Stats
+            </p>
+          </header>
+          <div class="card-content">
+            <div id="invStatContent" class="content"></div>
+          </div>
+        </div>
+      `
+    );
+  };
+  if ($("#inventory-row").html() === "") {
+    $("#invStatContent").empty();
+    return;
+  };
+  getInventoryValues()
+  .then(data => {
+    let Value = 0;
+    let DemandInfo = [0, 0];
+    let ItemCount = 0;
+    data.forEach((item) => {
+      Value += item['EXOTICVALUE'];
+      DemandInfo[0] += parseInt(item['DEMANDNUMBER']);
+      DemandInfo[1]++;
+      ItemCount++;
+    });
+    let AverageDemand = DemandInfo[0] / DemandInfo[1];
+    $("#invStatContent").html(
+      `
+        <table class="table" id="invStatTable">
+          <tr>
+            <th>Exotic Value</th>
+            <th>${Value.toFixed(3)}</th>
+          </tr>
+          <tr>
+            <th>Average demand</th>
+            <th>${AverageDemand} stars</th>
+          </tr>
+          <tr>
+            <th>Item count</th>
+            <th>${ItemCount}</th>
+          </tr>
+        </table>
+      `
+    );
+  })
+  .catch(err => {
+    console.log(err);
+  });
+}
+
+function getInventoryValues() {
+  return new Promise(function(resolve, reject) {
+
+    var ids = $('#inventory-row').children().map(function(){
+      return $(this).attr('id');
+      }).get();
+    
+    ids.forEach(function(id) {
+      let amount = $(`#inventory-row #${id}`).attr("amount");
+      if (amount !== "1") {
+        for (var i = 1; i < amount; i++) {
+          ids.push(id);
+        }
+      }
+    })
+    
+    let names = ids.join(",");
+  
+    fetch('https://api.nangurepo.com/v2/assassin?name=' + names)
+    .then(response => response.json())
+    .then(data => {
+        if (names.includes(",")) {
+          resolve(data);
+        } else {
+          resolve([data[0]]);
+        }
+    })
+    .catch(err => {
+      reject(err);
+    });
+  })
+  
 }
 
 function loadInventory() {
@@ -95,6 +188,7 @@ function loadInventory() {
     data.forEach(item => {
       addToInventory(item, "load")
     })
+    updateStats();
   })
 }
 

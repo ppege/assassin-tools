@@ -95,42 +95,45 @@
           </header>
           <div class="card-content">
             <div class="section">
-              <div class="columns is-desktop">
+              <div id="invColumn" class="columns is-desktop">
                 <div class="column is-half">
                   <div class="box" id="inventoryContainer">
                     <div id="inventory-row" class="tile is-ancestor is-flex-wrap-wrap"></div>
                   </div>
                 </div>
                 <div class="column is-half">
-                  <div class="card">
-                    <header class="card-header has-background-danger">
-                      <p class="card-header-title">Settings</p>
-                      <button data-tooltip="Load and save your inventory with this menu. To create an inventory, just enter any code and save what you've added to the inventory box. You'll be able to load it again at any time." class="card-header-icon has-tooltip-multiline has-tooltip-left" aria-label="?">
-                        <span class="icon">
-                          <i class="fas fa-question-circle"></i>
-                        </span>
-                      </button>
-                    </header>
-                    <div class="field card-content">
-                      <label class="label">Inventory code</label>
-                      <div class="control">
-                        <input class="input" id="codeInput"></input>
+                  <div class="row is-half">
+                    <div class="card">
+                      <header class="card-header has-background-danger">
+                        <p class="card-header-title">Settings</p>
+                        <button data-tooltip="Load and save your inventory with this menu. To create an inventory, just enter any code and save what you've added to the inventory box. You'll be able to load it again at any time." class="card-header-icon has-tooltip-multiline has-tooltip-left" aria-label="?">
+                          <span class="icon">
+                            <i class="fas fa-question-circle"></i>
+                          </span>
+                        </button>
+                      </header>
+                      <div class="field card-content">
+                        <label class="label">Inventory code</label>
+                        <div class="control">
+                          <input class="input" id="codeInput"></input>
+                        </div>
+                        <div class="buttons" id="saveLoadButtons">
+                          <button class="button is-link" id="loadInventory" onclick="loadInventory()">Load</button>
+                          <button class="button is-primary" id="saveInventory" onclick="saveInventory()">Save</button>
+                          <button class="button is-danger" id="autosave">Auto: off</button>
+                        </div>
+                        <label class="label">On knife click</label>
+                        <div class="select">
+                          <select id="clickModeSelect">
+                            <option>Add to trade</option>
+                            <option>Delete</option>
+                          </select>
+                        </div>
+                        <p id="invwarning" style="color:red;"></p>
                       </div>
-                      <div class="buttons" id="saveLoadButtons">
-                        <button class="button is-link" id="loadInventory" onclick="loadInventory()">Load</button>
-                        <button class="button is-primary" id="saveInventory" onclick="saveInventory()">Save</button>
-                        <button class="button is-danger" id="autosave">Auto: off</button>
-                      </div>
-                      <label class="label">On knife click</label>
-                      <div class="select">
-                        <select id="clickModeSelect">
-                          <option>Add to trade</option>
-                          <option>Delete</option>
-                        </select>
-                      </div>
-                      <p id="invwarning" style="color:red;"></p>
                     </div>
                   </div>
+                  <div class="row is-half" id="statRow"></div>
                 </div>
               </div>
             </div>
