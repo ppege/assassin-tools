@@ -9,10 +9,10 @@ function addItem(name1, side) {
     let amount = $(`#${side} #${name}`).attr("amount");
     $(`#${side} #${name}`).attr("amount", parseInt(amount)+1);
     $(`#${side} #${name}_amount`).html(parseInt(amount)+1);
-    updateResult();
+    updateResult(side);
     return;
   }
-  if (panel.children().length === 6) {
+  if (panel.children().length >= 6) {
     $("#warningtext").html("Max. 6 items per offer! Don't get scammed.");
     setTimeout(function() {
       $("#warningtext").empty();
@@ -20,9 +20,14 @@ function addItem(name1, side) {
     return;
   }
   panel.append(
-    `<div amount=1 data-tooltip="${name1}" onclick="removeItem('${name}', '${side}')" id="${name}" class="tile is-child has-tooltip-bottom is-2"><img height=128 width=128 src="images/${name}.png"><p class="has-text-centered" id="${name}_amount"></p></div>`
+    `<div amount=1 data-tooltip="${name1}" onclick="removeItem('${name}', '${side}')" id="${name}" class="tile knife is-child has-tooltip-bottom is-2"><button style="display:none" class="button show_on_hover">Add to trade</button><img height=128 width=128 src="images/${name}.png"><p class="has-text-centered" id="${name}_amount"></p></div>`
   );
-  updateResult();
+  if (panel.children().length >= 6 && side === "inventory-row") {
+    $("#inventoryContainer").append(
+      `<div id="inventory-row" class="tile is-ancestor"></div>`
+    );
+  }
+  updateResult(side);
 }
   
 function removeItem(name1, side) {
@@ -32,18 +37,21 @@ function removeItem(name1, side) {
     $(`#${side} #${name}`).attr("amount", parseInt(amount)-1);
     if (parseInt(amount)-1 === 1){
       $(`#${side} #${name}_amount`).empty();
-      updateResult();
+      updateResult(side);
       return;
     }
     $(`#${side} #${name}_amount`).html(parseInt(amount)-1);
-    updateResult();
+    updateResult(side);
     return;
   }
   $(`#${side} #${name}`).remove();
-  updateResult();
+  updateResult(side);
 }
 
-function updateResult() {
+function updateResult(side) {
+  if (side === "inventory-row") {
+    return;
+  }
   if ($("#tradeStats").length === 0) {
     $("#warningtext").after(
       `
@@ -99,7 +107,7 @@ function updateResult() {
     };
     if (leftAverageDemand == rightAverageDemand) {
       leftDemandW = "EVEN!";
-    }
+    };
     $("#statContent").html(
       `
         <table class="table" id="stattable">
@@ -132,6 +140,7 @@ function updateResult() {
 
 function getValues(side) {
   return new Promise(function(resolve, reject) {
+
     var ids = $('#' + side).children().map(function(){
       return $(this).attr('id');
       }).get();

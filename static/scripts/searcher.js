@@ -22,7 +22,7 @@ function doneTyping() {
         $('#valuetable').find('tr:gt(0)').remove();
         data.forEach(function(knife) {
             $('#valuetable').append(
-                `<tr><th><img width=96 height=96 src="images/${knife['NAME'].toUpperCase().replace(/ /g,"_")}.png"></th><th>${knife['NAME']}</th><th>${knife['DEMAND']}</th><th>${knife['VALUE']}</th><th>${knife['OBTAIN']}</th><th>${knife['ORIGIN']}</th><th><button class="button" onclick="addItem('${knife['NAME']}', 'left')">LEFT</button><button class="button" onclick="addItem('${knife['NAME']}', 'right')">RIGHT</button></th></tr>`
+                `<tr><th><img width=96 height=96 src="images/${knife['NAME'].toUpperCase().replace(/ /g,"_")}.png"></th><th>${knife['NAME']}</th><th>${knife['DEMAND']}</th><th>${knife['VALUE']}</th><th>${knife['OBTAIN']}</th><th>${knife['ORIGIN']}</th><th><button class="button" onclick="addItem('${knife['NAME']}', 'left')">LEFT</button><button class="button" onclick="addItem('${knife['NAME']}', 'right')">RIGHT</button><button class="button" onclick="addToInventory('${knife['NAME']}')">INVENTORY</button></th></tr>`
             );
         })
     });
