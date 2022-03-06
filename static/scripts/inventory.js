@@ -174,7 +174,7 @@ function getInventoryValues() {
 
 function loadInventory() {
   let code = $("#codeInput").val();
-  fetch('https://api.nangurepo.com/v2/assassin?read&code=' + code)
+  fetch('https://api.nangurepo.com/v2/assassin?code=' + code)
   .then(response => response.json())
   .then(data => {
     if (data === "failure") {
@@ -208,7 +208,7 @@ function saveInventory() {
   })
   let names = ids.join(",");
 
-  fetch('https://api.nangurepo.com/v2/assassin?write&code=' + code + "&name=" + names);
+  fetch('https://api.nangurepo.com/v2/assassin?code=' + code + "&name=" + names);
 }
 
 if (window.getCookie('we-love-cookies') === "1") {
