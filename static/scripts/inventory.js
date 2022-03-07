@@ -3,27 +3,8 @@ window.getCookie = function(name) {
   if (match) return match[2];
 };
 
-autosave = localStorage.getItem("autosave") || false;
-
-$('#autosave').click(function() {
-  if(!autosave) {
-    $("#saveInventory").prop( "disabled", true );
-    $("#loadInventory").prop( "disabled", true );
-    $("#codeInput").prop( "disabled", true );
-    $('#autosave').html("Auto: on");
-    $('#autosave').removeClass("is-danger");
-    $('#autosave').addClass("is-success");
-    autosave = true;
-  } else {
-    $("#saveInventory").prop( "disabled", false );
-    $("#loadInventory").prop( "disabled", false );
-    $("#codeInput").prop( "disabled", false );
-    $('#autosave').html("Auto: off");
-    $('#autosave').addClass("is-danger");
-    $('#autosave').removeClass("is-success");
-    autosave = false;
-  };
-});
+let inventoryCode = $("#codeInput").val();
+let itemSize = 2;
 
 function addToInventory(name1, mode) {
   let name = name1.toUpperCase().replace(/ /g,"_");
@@ -33,15 +14,15 @@ function addToInventory(name1, mode) {
     let amount = knife.attr("amount");
     knife.attr("amount", parseInt(amount)+1);
     $(`#inventory-row #${name}_amount`).html(parseInt(amount)+1);
-    if (autosave && mode !== "load") {
+    if (mode !== "load") {
       saveInventory();
     }
     return;
   }
   panel.append(
-    `<div amount=1 data-tooltip="${name1}" onclick="handleClick('${name}')" id="${name}" class="tile card knife is-child has-tooltip-bottom is-2"><button style="display:none" class="button show_on_hover">Add to trade</button><img height=128 width=128 src="images/${name}.png"><p class="has-text-centered" id="${name}_amount"></p></div>`
+    `<div amount=1 data-tooltip="${name1}" onclick="handleClick('${name}')" id="${name}" class="tile card knife is-child has-tooltip-bottom is-${itemSize}"><button style="display:none" class="button show_on_hover">Add to trade</button><img height=100% width=100% src="images/${name}.png"><p class="has-text-centered" id="${name}_amount"></p></div>`
   );
-  if (autosave && mode !== "load") {
+  if (mode !== "load") {
     saveInventory();
     updateStats();
   }
@@ -63,22 +44,16 @@ function removeFromInventory(name1, mode) {
     knife.attr("amount", parseInt(amount)-1);
     if (parseInt(amount)-1 === 1){
       $(`#inventory-row #${name}_amount`).empty();
-      if (autosave) {
-        saveInventory();
-      }
+      saveInventory();
       return;
     }
     $(`#inventory-row #${name}_amount`).html(parseInt(amount)-1);
-    if (autosave) {
-      saveInventory();
-    }
+    saveInventory();
     return;
   }
   knife.remove();
   updateStats();
-  if (autosave) {
-    saveInventory();
-  }
+  saveInventory();
 }
 
 function updateStats() {
@@ -116,20 +91,24 @@ function updateStats() {
     let AverageDemand = DemandInfo[0] / DemandInfo[1];
     $("#invStatContent").html(
       `
+      <div class="table-container">
         <table class="table" id="invStatTable">
-          <tr>
-            <th>Exotic Value</th>
-            <th>${Value.toFixed(3)}</th>
-          </tr>
-          <tr>
-            <th>Average demand</th>
-            <th>${AverageDemand} stars</th>
-          </tr>
-          <tr>
-            <th>Item count</th>
-            <th>${ItemCount}</th>
-          </tr>
+          <thead>
+            <tr>
+              <th>Exotic Value</th>
+              <th>Average demand</th>
+              <th>Item count</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th>${Value.toFixed(3)}</th>
+              <th>${AverageDemand} stars</th>
+              <th>${ItemCount}</th>
+            </tr>
+          </tbody>
         </table>
+      </div>
       `
     );
   })
@@ -177,13 +156,6 @@ function loadInventory() {
   fetch('https://api.nangurepo.com/v2/assassin?code=' + code)
   .then(response => response.json())
   .then(data => {
-    if (data === "failure") {
-      $("#invwarning").html("No inventory found with code '" + code + "'");
-      setTimeout(function() {
-        $("#invwarning").empty();
-      }, 5000)
-      return;
-    }
     $("#inventory-row").empty();
     data.forEach(item => {
       addToInventory(item, "load")
@@ -211,20 +183,45 @@ function saveInventory() {
   fetch('https://api.nangurepo.com/v2/assassin?code=' + code + "&name=" + names);
 }
 
-if (window.getCookie('we-love-cookies') === "1") {
-  $("#loadInventory").click(function() {
-    localStorage.setItem('code', $("#codeInput").val());
-  });
-  $("#autosave").click(function() {
-    localStorage.setItem('auto', autosave);
-  });
-};
+function warn(message) {
+  $("#invwarning").html(message);
+  setTimeout(function() {
+    $("#invwarning").empty();
+  }, 3000)
+}
+
+$("#codeInput").change(function() {
+  let $input = $(this);
+  if ($input.val().length >= 3) {
+    loadInventory();
+  } else {
+    warn("Code must be at least 3 characters long.");
+  };
+  localStorage.setItem('code', $("#codeInput").val());
+  inventoryCode = $input.val();
+})
+
+$("#itemSizeSelect").change(function() {
+  let sizeSelected = $("#itemSizeSelect").find(":selected").text()
+  if (sizeSelected === "Large") {
+    itemSize = 2;
+  } else {
+    itemSize = 1;
+  }
+  localStorage.setItem("itemSize", sizeSelected);
+  loadInventory();
+})
+
+$("#clickModeSelect").change(function() {
+  localStorage.setItem("clickMode", $("#clickModeSelect").find(":selected").text())
+})
 
 if (localStorage.getItem('code') !== null) {
   $("#codeInput").val(localStorage.getItem('code'));
-  loadInventory();
-}
-
-if (localStorage.getItem('auto') !== null && localStorage.getItem('auto') == "true") {
-  $("#autosave").click();
-}
+};
+if (localStorage.getItem('itemSize') !== null) {
+  $("#itemSizeSelect").val(localStorage.getItem('itemSize')).change();
+};
+if (localStorage.getItem('clickMode') !== null) {
+  $("#clickModeSelect").val(localStorage.getItem('clickMode'));
+};
