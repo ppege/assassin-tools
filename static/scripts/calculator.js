@@ -48,6 +48,34 @@ function removeItem(name1, side) {
   updateResult(side);
 }
 
+$("#applyTrade").click(function() {
+  function getIds(side) {
+    var ids = $('#' + side).children().map(function(){
+      return $(this).attr('id');
+      }).get();
+    
+    ids.forEach(function(id) {
+      let amount = $(`#${side} #${id}`).attr("amount");
+      if (amount !== "1") {
+        for (var i = 1; i < amount; i++) {
+          ids.push(id);
+        }
+      }
+    })
+    return ids;
+  };
+  let leftIds = getIds('left');
+  let rightIds = getIds('right');
+  leftIds.forEach(function(id) {
+    removeFromInventory(id);
+  });
+  rightIds.forEach(function(id) {
+    addToInventory(id, 'load')
+  });
+  saveInventory();
+  $("#clearTrade").click();
+})
+
 function updateResult(side) {
   if (side === "inventory-row") {
     return;
