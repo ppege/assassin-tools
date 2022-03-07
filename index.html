@@ -48,7 +48,6 @@
                 </table>
               </div>
             </div>
-            <h2 class="subtitle is-6">Powered by <a target="_blank" href="https://api.nangurepo.com/v2/assassin?name=Skeleton%20King">NanguRepo Assassin value API</a>, created by <a target="_blank" href="https://nangurepo.com">Nangu</a></h2>
           </div>
         </div>
         <script src="static/scripts/searcher.js"></script>
@@ -96,15 +95,13 @@
           </header>
           <div class="card-content">
             <div class="section">
-              <div class="columns">
-                <div class="column is-three-quarters">
+              <div class="field is-grouped is-grouped-multiline">
+                <div class="control">
                   <label class="label">Inventory code</label>
-                  <div class="control">
-                    <input class="input" id="codeInput"></input>
-                  </div>
+                  <input class="input" id="codeInput" placeholder="Inventory code"></input>
                 </div>
-                <div class="column">
-                  <label class="label">Item size</label>
+                <div class="control">
+                  <label class="label">Icon Size</label>
                   <div class="select">
                     <select id="itemSizeSelect">
                       <option>Large</option>
@@ -112,8 +109,8 @@
                     </select>
                   </div>
                 </div>
-                <div class="column">
-                  <label class="label">On knife click</label>
+                <div class="control">
+                  <label class="label">On click</label>
                   <div class="select">
                     <select id="clickModeSelect">
                       <option>Add to trade</option>
@@ -133,5 +130,18 @@
         <script src="static/scripts/inventory.js"></script>
       </div>
     </div>
+    <footer class="footer">
+      <div class="content has-text-centered">
+        <p>
+          Assassin Tools by <a target="_blank" href="https://nangurepo.com">Nangu</a>, Powered by <a target="_blank" href="https://api.nangurepo.com/v2/assassin?name=Skeleton%20King">NanguRepo API</a>
+        </p>
+        <a class="button" target="_blank" href="https://github.com/nangurepo/assassinsearcher">
+          <span class="icon">
+            <i class="fab fa-github"></i>
+          </span>
+          <span>Visit Source</span>
+        </a>
+      </div>
+    </footer>
   </section>
 </body>
