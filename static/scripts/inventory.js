@@ -20,12 +20,30 @@ function addToInventory(name1, mode) {
     return;
   }
   panel.append(
-    `<div amount=1 data-tooltip="${name1}" onclick="handleClick('${name}')" id="${name}" class="tile card knife is-child has-tooltip-bottom is-${itemSize}"><button style="display:none" class="button show_on_hover">Add to trade</button><img height=100% width=100% src="images/${name}.png"><p class="has-text-centered" id="${name}_amount"></p></div>`
+    `<div amount=1 data-tooltip="${name1}" onclick="handleClick('${name}')" id="${name}" class="tile card knife is-child has-tooltip-right is-${itemSize}"><button style="display:none" class="button show_on_hover">Add to trade</button><img height=100% width=100% src="images/${name}.png"><p class="has-text-centered" id="${name}_amount"></p></div>`
   );
   if (mode !== "load") {
     saveInventory();
     updateStats();
   }
+}
+
+function addDetails(data) {
+  var ids = $('#inventory-row').children().map(function(){
+    return $(this).attr('id');
+    }).get();
+  
+  ids.forEach(function(id) {
+    let amount = $(`#inventory-row #${id}`).attr("amount");
+    if (amount !== "1") {
+      for (var i = 1; i < amount; i++) {
+        ids.push(id);
+      }
+    }
+  })
+  data.forEach((item, i) => {
+    $(`#inventory-row #${ids[i]}`).attr('data-tooltip', `${item['NAME']}\n${item['DEMAND']}\nWorth ${item['EXOTICVALUE']} T1 exotics`)
+  })
 }
 
 function handleClick(name) {
@@ -79,6 +97,7 @@ function updateStats() {
   };
   getInventoryValues()
   .then(data => {
+    addDetails(data);
     let Value = 0;
     let DemandInfo = [0, 0];
     let ItemCount = 0;
