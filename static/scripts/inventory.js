@@ -14,33 +14,20 @@ function addToInventory(name1, mode) {
     let amount = knife.attr("amount");
     knife.attr("amount", parseInt(amount)+1);
     $(`#inventory-row #${name}_amount`).html(parseInt(amount)+1);
-    if (mode !== "load") {
-      saveInventory();
-    }
+    saveInventory(mode);
     return;
   }
   panel.append(
     `<div amount=1 data-tooltip="${name1}" onclick="handleClick('${name}')" id="${name}" class="tile card knife is-child has-tooltip-right is-${itemSize}"><button style="display:none" class="button show_on_hover">Add to trade</button><img height=100% width=100% src="images/${name}.png"><p class="has-text-centered" id="${name}_amount"></p></div>`
   );
   if (mode !== "load") {
-    saveInventory();
+    saveInventory(mode);
     updateStats();
   }
 }
 
 function addDetails(data) {
-  var ids = $('#inventory-row').children().map(function(){
-    return $(this).attr('id');
-    }).get();
-  
-  ids.forEach(function(id) {
-    let amount = $(`#inventory-row #${id}`).attr("amount");
-    if (amount !== "1") {
-      for (var i = 1; i < amount; i++) {
-        ids.push(id);
-      }
-    }
-  })
+  let ids = getIds('inventory-row');
   data.forEach((item, i) => {
     $(`#inventory-row #${ids[i]}`).attr('data-tooltip', `${item['NAME']}\n${item['DEMAND']}\nWorth ${item['EXOTICVALUE']} T1 exotics`)
   })
@@ -62,16 +49,16 @@ function removeFromInventory(name1, mode) {
     knife.attr("amount", parseInt(amount)-1);
     if (parseInt(amount)-1 === 1){
       $(`#inventory-row #${name}_amount`).empty();
-      saveInventory();
+      saveInventory(mode);
       return;
     }
     $(`#inventory-row #${name}_amount`).html(parseInt(amount)-1);
-    saveInventory();
+    saveInventory(mode);
     return;
   }
   knife.remove();
   updateStats();
-  saveInventory();
+  saveInventory(mode);
 }
 
 function updateStats() {
@@ -90,11 +77,11 @@ function updateStats() {
         </div>
       `
     );
-  };
+  }
   if ($("#inventory-row").html() === "") {
     $("#invStatContent").empty();
     return;
-  };
+  }
   getInventoryValues()
   .then(data => {
     addDetails(data);
@@ -139,18 +126,7 @@ function updateStats() {
 function getInventoryValues() {
   return new Promise(function(resolve, reject) {
 
-    var ids = $('#inventory-row').children().map(function(){
-      return $(this).attr('id');
-      }).get();
-    
-    ids.forEach(function(id) {
-      let amount = $(`#inventory-row #${id}`).attr("amount");
-      if (amount !== "1") {
-        for (var i = 1; i < amount; i++) {
-          ids.push(id);
-        }
-      }
-    })
+    let ids = getIds('inventory-row');
     
     let names = ids.join(",");
   
@@ -183,20 +159,10 @@ function loadInventory() {
   })
 }
 
-function saveInventory() {
+function saveInventory(mode) {
+  if (mode === "load") { return; }
   let code = $("#codeInput").val();
-  var ids = $('#inventoryContainer').children().children().map(function(){
-    return $(this).attr('id');
-    }).get();
-  
-  ids.forEach(function(id) {
-    let amount = $(`#inventory-row #${id}`).attr("amount");
-    if (amount !== "1") {
-      for (var i = 1; i < amount; i++) {
-        ids.push(id);
-      }
-    }
-  })
+  let ids = getIds('inventory-row');
   let names = ids.join(",");
 
   fetch('https://api.nangurepo.com/v2/assassin?code=' + code + "&name=" + names);
@@ -215,7 +181,7 @@ $("#codeInput").change(function() {
     loadInventory();
   } else {
     warn("Code must be at least 3 characters long.");
-  };
+  }
   localStorage.setItem('code', $("#codeInput").val());
   inventoryCode = $input.val();
 })
@@ -237,10 +203,10 @@ $("#clickModeSelect").change(function() {
 
 if (localStorage.getItem('code') !== null) {
   $("#codeInput").val(localStorage.getItem('code'));
-};
+}
 if (localStorage.getItem('itemSize') !== null) {
   $("#itemSizeSelect").val(localStorage.getItem('itemSize')).change();
-};
+}
 if (localStorage.getItem('clickMode') !== null) {
   $("#clickModeSelect").val(localStorage.getItem('clickMode'));
-};
+}
