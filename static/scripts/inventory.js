@@ -46,7 +46,12 @@ function handleClick(name) {
 
 $("#generate-ad").click(function() {
   let things = $(".is-selected-knife").map(function(){
-    return $(this).attr('amount') + " " + $(this).attr('id').toLowerCase().replace(/_/g, ' ');
+    let amount = $(this).attr('amount')
+    if (amount > 1) {
+      return amount + " " + $(this).attr('id').toLowerCase().replace(/_/g, ' ');
+    } else {
+      return $(this).attr('id').toLowerCase().replace(/_/g, ' ');
+    }
   }).get();
   prompt("Your trade ad:", `**Trading** ${things.join(', ')}`);
 })
