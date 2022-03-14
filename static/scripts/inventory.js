@@ -36,10 +36,20 @@ function addDetails(data) {
 function handleClick(name) {
   if ($("#clickModeSelect").find(":selected").text() === "Delete") {
     removeFromInventory(name);
-  } else {
+  } else if ($("#clickModeSelect").find(":selected").text() === "Add to trade") {
     addItem(name, "left");
+  } else {
+    $(`#inventory-row #${name}`).toggleClass('has-background-danger');
+    $(`#inventory-row #${name}`).toggleClass('is-selected-knife');
   }
 }
+
+$("#generate-ad").click(function() {
+  let things = $(".is-selected-knife").map(function(){
+    return $(this).attr('amount') + " " + $(this).attr('id').toLowerCase().replace(/_/g, ' ');
+  }).get();
+  prompt("Your trade ad:", `**Trading** ${things.join(', ')}`);
+})
 
 function removeFromInventory(name1, mode) {
   let name = name1.replace(/ /g,"_");
