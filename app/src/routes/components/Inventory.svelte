@@ -75,12 +75,12 @@
     {#if output}
         {#each output as item}
             <div
-                class="w-auto h-full bg-slate-200"
+                class="w-auto h-full bg-slate-200 dark:bg-slate-700"
                 on:mouseover={()=>handleMouseover(item)}
                 on:focus={()=>handleMouseover(item)}
             >
                 {#if item.amount}
-                <p class="absolute font-bold">{item.amount}</p>
+                <p class="absolute font-bold dark:text-white">{item.amount}</p>
                 {/if}
                 <img class="w-32 h-32" src={"images/" + item.name.toUpperCase().replace(/ /g, '_') + ".png"} alt="knife" />
                 <div class={`w-full h-auto px-2 ${colorFromRarity(item.rarity)}`}>
@@ -89,7 +89,7 @@
             </div>
         {/each}
         {#if visible}
-            <span class="h-auto shadow-lg p-2 m-2 bg-white/75 backdrop-blur absolute" transition:fade style="left:{clientX}px; top:{clientY}px;">
+            <span class="h-auto shadow-lg p-2 m-2 bg-white/75 dark:bg-slate-600/75 dark:text-white backdrop-blur absolute" transition:fade style="left:{clientX}px; top:{clientY}px;">
                 <p class="font-bold">{activeItem.name}</p>
                 <p>{activeItem.demand}</p>
                 <div class="font-bold">
