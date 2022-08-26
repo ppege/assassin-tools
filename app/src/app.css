@@ -9,4 +9,8 @@
   @apply visible z-50;
 }
 
+.item-button-small {
+  @apply w-auto h-min px-1 bg-white text-xs rounded border border-slate-300 items-center justify-center hover:bg-slate-100 dark:bg-slate-800 dark:border-slate-600 dark:hover:border-slate-100 dark:hover:bg-slate-900;
+}
+
 @tailwind utilities;

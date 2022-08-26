@@ -1,37 +1,25 @@
 <script lang="ts">
+    import Item from "./Item.svelte"
 	import { fade } from 'svelte/transition';
-    let visible = false;
-    let clientX: any;
-    let clientY: any;
-    const handleMousemove = (e: any) => {
-        clientX = e.clientX;
-        clientY = e.clientY;
-    };
-    const handleMouseover = (item: item) => {
-        activeItem = item;
-        visible = true;
-    }
-    const handleMouseleave = () => {
-        visible = false;
-    }
-    interface item {
-        name: string;
-        value: string;
-        demand: string;
-        rarity: string;
-        exoticvalue: number;
-        obtain: string;
-        origin: string;
-        amount: number;
-    }
-    let activeItem: item
+    import { flip } from 'svelte/animate'
+    import { inventory, code } from "./stores"
+    import type { item } from './stores'
+
     let output: item[] = []
+    $inventory = []
     const getValues = async () => {
-		const itemList = await fetch('https://api.nangurepo.com/v2/assassin?code=nangu')
+        output = []
+		const itemList = await fetch(`https://api.nangurepo.com/v2/assassin?code=${$code}`)
         .then(x => x.json())
-        output = await fetch(`https://api.nangurepo.com/v2/assassin?name=${itemList}`)
+        output = await fetch(`https://api.nangurepo.com/v2/assassin?limit=1&name=${itemList}`)
         .then(x => x.json())
-        output = generateStacks(output)
+        for (let [i, obj] of output.entries()) {
+            obj.id = i
+        }
+        if (!Array.isArray(output)) {
+            output = []
+        }
+        $inventory = generateStacks(output)
     }
     const generateStacks = (arr: item[]) => {
         let results = [];
@@ -54,56 +42,40 @@
                 results.push(prevItem)
             }
         }
+        for (const obj of arr) {
+            if (!obj.amount) {
+                obj.amount = 1;
+            }
+        }
         return results
     }
-    const colorFromRarity = (rarity: String) => {
-        switch (rarity) {
-            case "Exotic":
-                return "bg-orange-500"
-            case "Mythic":
-                return "bg-red-600"
-            case "Dream":
-                return "bg-blue-200"
-            default:
-                return "bg-slate-300"
-        }
-    }
+	let timer: any;
+	const debounce = () => {
+		clearTimeout(timer);
+		timer = setTimeout(() => {
+			getValues();
+		}, 750);
+	}
     getValues();
 </script>
 
-<div class="flex flex-wrap gap-1" on:mousemove={handleMousemove} on:mouseleave={handleMouseleave}>
-    {#if output}
-        {#each output as item}
-            <div
-                class="w-auto h-full bg-slate-200 dark:bg-slate-700"
-                on:mouseover={()=>handleMouseover(item)}
-                on:focus={()=>handleMouseover(item)}
-            >
-                {#if item.amount}
-                <p class="absolute font-bold dark:text-white">{item.amount}</p>
-                {/if}
-                <img class="w-32 h-32" src={"images/" + item.name.toUpperCase().replace(/ /g, '_') + ".png"} alt="knife" />
-                <div class={`w-full h-auto px-2 ${colorFromRarity(item.rarity)}`}>
-                    <p class={`font-semibold text-center ${item.rarity!=="Dream"?"text-white":null} ${item.name.length>=12?"text-sm py-[2px]":"text-md"}`}>{item.name}</p>
+<div>
+    <div class="flex justify-center">
+        <input class="text-center rounded mt-5 px-5 py-3 w-auto justify-center bg-slate-200 dark:bg-slate-700 dark:text-white" placeholder="Inventory code" bind:value={$code} on:keyup={debounce}>
+    </div>
+    {#if $inventory.length}
+        <div
+            class="mt-1 flex flex-wrap gap-1 justify-center"
+            transition:fade={{ duration: 200 }}
+        >
+            {#each $inventory as item (item.id)}
+                <div
+                    class="table"
+                    animate:flip={{duration:100}}
+                >
+                    <Item item={item} context="inventory"/>
                 </div>
-            </div>
-        {/each}
-        {#if visible}
-            <span class="h-auto shadow-lg p-2 m-2 bg-white/75 dark:bg-slate-600/75 dark:text-white backdrop-blur absolute" transition:fade style="left:{clientX}px; top:{clientY}px;">
-                <p class="font-bold">{activeItem.name}</p>
-                <p>{activeItem.demand}</p>
-                <div class="font-bold">
-                    {#if isNaN(activeItem.value)}
-                        <p>Worth {activeItem.value}</p>
-                    {/if}
-                    <p>Worth {activeItem.exoticvalue} exotics</p>
-                </div>
-                <div class="text-xs">
-                    <p>{activeItem.rarity}</p>
-                    <p>{activeItem.obtain}</p>
-                    <p>{activeItem.origin}</p>
-                </div>
-            </span>
-        {/if}
+            {/each}
+        </div>
     {/if}
 </div>
