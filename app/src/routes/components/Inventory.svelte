@@ -1,81 +1,46 @@
 <script lang="ts">
-    import Item from "./Item.svelte"
-	import { fade } from 'svelte/transition';
-    import { flip } from 'svelte/animate'
-    import { inventory, code } from "./stores"
-    import type { item } from './stores'
+    import Item from "./Item.svelte";
+    import { fade } from "svelte/transition";
+    import { inventory, code, saved } from "./stores";
+    import { getValues } from "./getValues";
 
-    let output: item[] = []
-    $inventory = []
-    const getValues = async () => {
-        output = []
-		const itemList = await fetch(`https://api.nangurepo.com/v2/assassin?code=${$code}`)
-        .then(x => x.json())
-        output = await fetch(`https://api.nangurepo.com/v2/assassin?limit=1&name=${itemList}`)
-        .then(x => x.json())
-        for (let [i, obj] of output.entries()) {
-            obj.id = i
-        }
-        if (!Array.isArray(output)) {
-            output = []
-        }
-        $inventory = generateStacks(output)
-    }
-    const generateStacks = (arr: item[]) => {
-        let results = [];
-        let prevItem: item = arr[0];
-        for (const [i, currentItem] of arr.entries()) {
-            if (i===0) {
-                continue;
-            }
-            if (currentItem.name == prevItem.name) {
-                if (!isNaN(prevItem.amount)) {
-                    prevItem.amount += 1
-                } else {
-                    prevItem.amount = 2
-                }
-            } else {
-                results.push(prevItem)
-                prevItem = currentItem
-            }
-            if (i == arr.length-1) {
-                results.push(prevItem)
-            }
-        }
-        for (const obj of arr) {
-            if (!obj.amount) {
-                obj.amount = 1;
-            }
-        }
-        return results
-    }
-	let timer: any;
-	const debounce = () => {
-		clearTimeout(timer);
-		timer = setTimeout(() => {
-			getValues();
-		}, 750);
-	}
-    getValues();
+    $inventory = [];
+    let timer: any;
+    const debounce = () => {
+        $inventory = [];
+        clearTimeout(timer);
+        timer = setTimeout(async () => {
+            $inventory = await getValues($code);
+        }, 750);
+    };
+    debounce();
 </script>
 
 <div>
-    <div class="flex justify-center">
-        <input class="text-center rounded mt-5 px-5 py-3 w-auto justify-center bg-slate-200 dark:bg-slate-700 dark:text-white" placeholder="Inventory code" bind:value={$code} on:keyup={debounce}>
+    <div class="flex gap-3 w-full justify-center">
+        {#if $saved}
+            <p
+                transition:fade={{ duration: 200 }}
+                class="text-gray-400 text-sm absolute"
+            >
+                Saved!
+            </p>
+        {/if}
+        <input
+            class="text-center rounded mt-5 px-5 py-2 h-fit align-bottom w-auto justify-center default"
+            placeholder="Inventory code"
+            bind:value={$code}
+            on:keyup={debounce}
+        />
     </div>
-    {#if $inventory.length}
-        <div
-            class="mt-1 flex flex-wrap gap-1 justify-center"
-            transition:fade={{ duration: 200 }}
-        >
-            {#each $inventory as item (item.id)}
-                <div
-                    class="table"
-                    animate:flip={{duration:100}}
-                >
-                    <Item item={item} context="inventory"/>
-                </div>
+    <div
+        class="overflow-scroll flex flex-wrap gap-1 justify-center"
+        transition:fade={{ duration: 200 }}
+    >
+        {#if $inventory.length}
+            {#each $inventory as item}
+                <Item {item} context="inventory" />
             {/each}
-        </div>
-    {/if}
+        {/if}
+    </div>
 </div>

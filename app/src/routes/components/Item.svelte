@@ -1,88 +1,133 @@
 <script lang="ts">
-	import { fade } from 'svelte/transition';
-    import { inventory } from './stores'
-    import type { item } from './stores'
+    import { getValues } from "./getValues";
+    import { fade } from "svelte/transition";
+    import { inventory, code, saved } from "./stores";
+    import type { item } from "./stores";
     export let context: string;
     export let item: item;
     let visible = false;
-    $: image = item.name.toUpperCase().replace(/ /g, '_')
+    $: image = item.name.toUpperCase().replace(/ /g, "_");
     const colorFromRarity = (rarity: String) => {
         switch (rarity) {
             case "Common":
-                return "bg-green-300"
+                return "bg-green-300";
             case "Rare":
-                return "bg-blue-400"
+                return "bg-blue-400";
             case "Legendary":
-                return "bg-purple-600"
+                return "bg-purple-600";
             case "Exotic":
-                return "bg-orange-500"
+                return "bg-orange-500";
             case "Mythic":
-                return "bg-red-600"
+                return "bg-red-600";
             case "Dream":
-                return "bg-blue-200"
+                return "bg-blue-200";
             default:
-                return "bg-black"
+                return "bg-black";
         }
-    }
+    };
     const handleMouseover = () => {
         visible = true;
-    }
+    };
     const handleMouseleave = () => {
         visible = false;
-    }
+    };
     const handleImgError = () => {
         image = "DEFAULT";
-    }
+    };
+    const getIndex = () => {
+        return $inventory.findIndex((obj) => {
+            return obj.name === item.name;
+        });
+    };
+    let timer: any;
+    const debounce = (func: Function) => {
+        clearTimeout(timer);
+        timer = setTimeout(async () => {
+            func();
+        }, 750);
+    };
+    const announceSaved = () => {
+        $saved = true;
+        setTimeout(() => {
+            $saved = false;
+        }, 2000);
+    };
+    const save = async () => {
+        const names = $inventory.map((obj) => obj.name);
+        for (const obj of $inventory) {
+            if (obj.amount > 1) {
+                for (let i = 1; i < obj.amount; i++) {
+                    names.push(obj.name);
+                }
+            }
+        }
+        fetch(
+            `https://api.nangurepo.com/v2/assassin?code=${$code}&name=${names}`
+        ).then(async () => {
+            $inventory = await getValues($code);
+            announceSaved();
+        });
+    };
     const handlePlus = () => {
-        if (context=="inventory") {
-            item.amount++;
-        } else if (context=="search") {
-            const index = $inventory.findIndex(obj => {
-                return obj.name === item.name
-            })
+        const index = getIndex();
+        if (context == "inventory") {
+            $inventory[index].amount++;
+            debounce(save);
+            return;
+        } else if (context == "search") {
             if (index != -1) {
-                $inventory[index].amount++
+                $inventory[index].amount++;
+                debounce(save);
                 return;
             }
-            item.id = $inventory[$inventory.length-1].id + 1
-            item.amount = 1
-            let tempInv: item[] = [item, ...$inventory]
-            tempInv.sort((a, b) => a.name.localeCompare(b.name))
-            tempInv.sort((a, b) => (a.exoticvalue > b.exoticvalue) ? 1 : -1)
-            for (let [i, obj] of tempInv.entries()) {
-                obj.id = i
-            }
-            $inventory = tempInv
+            item.amount = 1;
+            $inventory = [...$inventory, item];
+            save();
+            return;
         }
-    }
+    };
     const handleMinus = () => {
+        const index = getIndex();
         if (item.amount != 1) {
-            item.amount--;
+            $inventory[index].amount--;
+            debounce(save);
             return;
         }
         $inventory = $inventory.filter((obj) => {
             return obj.name !== item.name;
-        })
-    }
+        });
+        debounce(save);
+    };
 </script>
 
-<div class="w-auto h-full">
+<div class="w-auto h-auto">
     <div
-        class="w-full h-full relative block bg-slate-200 dark:bg-slate-700"
+        class="w-full h-auto relative block bg-slate-200 dark:bg-slate-700"
         on:mouseover={handleMouseover}
         on:focus={handleMouseover}
         on:mouseleave={handleMouseleave}
     >
         {#if visible}
-            <div class="absolute block top-0 bottom-0 left-0 right-0 p-1 bg-white/25 dark:bg-slate-600/25 dark:text-white backdrop-blur z-10" transition:fade={{ duration: 100 }}>
+            <div
+                class="absolute block top-0 bottom-0 left-0 right-0 p-1 bg-white/25 dark:bg-slate-600/25 dark:text-white backdrop-blur z-10"
+                transition:fade={{ duration: 100 }}
+            >
                 <div class="absolute right-1 bottom-1 flex flex-col">
-                    <button class="item-button-small" on:click={handlePlus}>+</button>
+                    <button class="item-button-small" on:click={handlePlus}
+                        >+</button
+                    >
                     {#if context == "inventory"}
-                        <button class="item-button-small" on:click={handleMinus}>-</button>
+                        <button class="item-button-small" on:click={handleMinus}
+                            >-</button
+                        >
                     {/if}
                 </div>
                 <div class="absolute top-1 w-10/12">
-                    <p class="{String(item.origin).length>=25?"text-[0.5rem]":"text-xs"}">
+                    <p
+                        class={String(item.origin).length >= 25
+                            ? "text-[0.5rem]"
+                            : "text-xs"}
+                    >
                         {item.origin}
                     </p>
                     <p class="text-[0.4rem]">
@@ -93,10 +138,10 @@
                     <p class="text-xs">{item.rarity}</p>
                     <div class="font-bold text-sm">
                         {#if isNaN(item.value)}
-                        <p>Worth {item.value}</p>
+                            <p>Worth {item.value}</p>
                         {/if}
                         {#if item.exoticvalue !== "Unknown"}
-                        <p>{item.exoticvalue} exotics</p>
+                            <p>{item.exoticvalue} exotics</p>
                         {/if}
                     </div>
                     <p>{item.demand}</p>
@@ -104,13 +149,29 @@
             </div>
         {/if}
         {#if item.amount !== 1 && context == "inventory"}
-            <p class="absolute right-1 top-[0.1rem] font-mono font-bold z-20 dark:text-white">
-                {item.amount}
-            </p>
+            {#key item.amount}
+                <p
+                    class="absolute right-1 top-[0.1rem] font-mono font-bold z-20 dark:text-white"
+                    transition:fade={{ duration: 100 }}
+                >
+                    {item.amount}
+                </p>
+            {/key}
         {/if}
-        <img on:error={handleImgError} class="w-32 h-auto" src={"images/" + image + ".png"} alt="knife" />
+        <img
+            on:error={handleImgError}
+            class="w-32 h-auto"
+            src={"images/" + image + ".png"}
+            alt="knife"
+        />
     </div>
-    <div class={`w-full h-auto px-2 ${colorFromRarity(item.rarity)}`}>
-        <p class={`font-semibold text-center ${item.rarity!=="Dream"?"text-white":null} ${item.name.length>=12?"text-sm py-[2px]":"text-md"}`}>{item.name}</p>
+    <div class={`w-full h-auto px-2 py-[0.1rem] ${colorFromRarity(item.rarity)}`}>
+        <p
+            class={`font-semibold text-center ${
+                item.rarity !== "Dream" ? "text-white" : null
+            } ${item.name.length >= 12 ? "text-sm py-[2px]" : "text-md"}`}
+        >
+            {item.name}
+        </p>
     </div>
 </div>
