@@ -10,19 +10,19 @@
     const colorFromRarity = (rarity: String) => {
         switch (rarity) {
             case "Common":
-                return "bg-green-300";
+                return "to-green-300";
             case "Rare":
-                return "bg-blue-400";
+                return "to-blue-400";
             case "Legendary":
-                return "bg-purple-600";
+                return "to-purple-600";
             case "Exotic":
-                return "bg-orange-500";
+                return "to-orange-500";
             case "Mythic":
-                return "bg-red-600";
+                return "to-red-500";
             case "Dream":
-                return "bg-blue-200";
+                return "to-blue-200";
             default:
-                return "bg-black";
+                return "to-black";
         }
     };
     const handleMouseover = () => {
@@ -100,24 +100,24 @@
     };
 </script>
 
-<div class="w-auto h-auto">
+<div class="w-auto h-auto border-2 border-black">
     <div
-        class="w-full h-auto relative block bg-slate-200 dark:bg-slate-700"
+        class="w-full h-auto relative block bg-gradient-to-t from-gray-800 to-gray-500"
         on:mouseover={handleMouseover}
         on:focus={handleMouseover}
         on:mouseleave={handleMouseleave}
     >
         {#if visible}
             <div
-                class="absolute block top-0 bottom-0 left-0 right-0 p-1 bg-white/25 dark:bg-slate-600/25 dark:text-white backdrop-blur z-10"
+                class="absolute block top-0 bottom-0 left-0 right-0 p-1 bg-black/25 text-white backdrop-blur z-10"
                 transition:fade={{ duration: 100 }}
             >
                 <div class="absolute right-1 bottom-1 flex flex-col">
-                    <button class="item-button-small" on:click={handlePlus}
+                    <button class="item-button-small text-black" on:click={handlePlus}
                         >+</button
                     >
                     {#if context == "inventory"}
-                        <button class="item-button-small" on:click={handleMinus}
+                        <button class="item-button-small text-black" on:click={handleMinus}
                             >-</button
                         >
                     {/if}
@@ -151,7 +151,7 @@
         {#if item.amount !== 1 && context == "inventory"}
             {#key item.amount}
                 <p
-                    class="absolute right-1 top-[0.1rem] font-mono font-bold z-20 dark:text-white"
+                    class="absolute right-1 top-[0.1rem] font-mono font-bold z-20 text-white"
                     transition:fade={{ duration: 100 }}
                 >
                     {item.amount}
@@ -165,11 +165,15 @@
             alt="knife"
         />
     </div>
-    <div class={`w-full h-auto px-2 py-[0.1rem] ${colorFromRarity(item.rarity)}`}>
+    <div
+        class={`w-full h-auto px-2 py-[0.05rem] bg-gradient-to-t from-gray-700 ${colorFromRarity(
+            item.rarity
+        )}`}
+    >
         <p
-            class={`font-semibold text-center ${
-                item.rarity !== "Dream" ? "text-white" : null
-            } ${item.name.length >= 12 ? "text-sm py-[2px]" : "text-md"}`}
+            class={`font-semibold text-center text-white ${
+                item.name.length >= 12 ? "text-sm py-[2px]" : "text-md"
+            }`}
         >
             {item.name}
         </p>

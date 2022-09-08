@@ -6,18 +6,22 @@
 </script>
 
 <body class="dark:bg-slate-800">
-    <div class="w-full h-screen max-h-screen grid grid-cols-2">
-        <div class="h-1/2">
-            <Inventory />
+    <div class="w-full h-screen max-h-screen flex flex-row p-1">
+        <div class="flex flex-col w-full">
+            <div class="h-[75vh]">
+                <Inventory />
+            </div>
+            <div class="h-[25vh]">
+                <Stats />
+            </div>
         </div>
-        <div class="h-1/2">
-            <Search />
-        </div>
-        <div class="h-1/2">
-            <Stats />
-        </div>
-        <div class="h-1/2">
-            <Trade />
+        <div class="flex flex-col w-full">
+            <div class="h-1/2">
+                <Search />
+            </div>
+            <div class="h-1/2">
+                <Trade />
+            </div>
         </div>
     </div>
 </body>

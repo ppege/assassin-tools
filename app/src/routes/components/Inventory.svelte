@@ -5,42 +5,29 @@
     import { getValues } from "./getValues";
 
     $inventory = [];
-    let timer: any;
-    const debounce = () => {
-        $inventory = [];
-        clearTimeout(timer);
-        timer = setTimeout(async () => {
-            $inventory = await getValues($code);
-        }, 750);
-    };
-    debounce();
 </script>
 
-<div>
+<div class="h-full">
     <div class="flex gap-3 w-full justify-center">
         {#if $saved}
             <p
                 transition:fade={{ duration: 200 }}
-                class="text-gray-400 text-sm absolute"
+                class="text-gray-400 bg-white rounded shadow-xl text-xl px-4 py-2 absolute top-5 z-50"
             >
                 Saved!
             </p>
         {/if}
-        <input
-            class="text-center rounded mt-5 px-5 py-2 h-fit align-bottom w-auto justify-center default"
-            placeholder="Inventory code"
-            bind:value={$code}
-            on:keyup={debounce}
-        />
     </div>
-    <div
-        class="overflow-scroll flex flex-wrap gap-1 justify-center"
-        transition:fade={{ duration: 200 }}
-    >
-        {#if $inventory.length}
+    {#if $inventory.length}
+        <div
+            class="overflow-scroll h-full flex flex-wrap gap-[0.1rem] justify-center"
+            transition:fade={{ duration: 200 }}
+        >
             {#each $inventory as item}
+            <div class="h-auto">
                 <Item {item} context="inventory" />
+            </div>
             {/each}
-        {/if}
-    </div>
+        </div>
+    {/if}
 </div>
