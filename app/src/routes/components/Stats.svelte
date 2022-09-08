@@ -29,13 +29,13 @@
     />
     <div class="max-w-[75ch] mx-auto px-5">
         <h1 class="text-xl font-bold">Stats</h1>
-        <div class="flex flex-wrap w-3/4 gap-2">
+        <div class="flex flex-wrap gap-2 w-2/3 mt-4">
             <StatCard
                 title="Total value"
                 value={$inventory
                     .map((obj) => {
                         return typeof obj.exoticvalue == "number"
-                            ? obj.exoticvalue
+                            ? obj.exoticvalue * obj.amount
                             : 0;
                     })
                     .reduce((a, b) => a + b, 0) + " exotics"}
@@ -43,11 +43,44 @@
             <StatCard
                 title="Average demand"
                 value={$inventory.length
-                    ? $inventory
-                          .map((obj) => {
-                              return getDemandNumber(obj.demand);
-                          })
-                          .reduce((a, b) => a + b) / $inventory.length
+                    ? (
+                          $inventory
+                              .map((obj) => {
+                                  return (
+                                      getDemandNumber(obj.demand) * obj.amount
+                                  );
+                              })
+                              .reduce((a, b) => a + b) /
+                          $inventory
+                              .map((obj) => obj.amount)
+                              .reduce((a, b) => a + b)
+                      ).toFixed(3)
+                    : 0}
+            />
+            <StatCard
+                title="Average demand"
+                tag="exotic+"
+                value={$inventory.length
+                    ? (
+                          $inventory
+                              .map((obj) => {
+                                  return obj.rarity == "Exotic" ||
+                                      obj.rarity == "Mythic" ||
+                                      obj.rarity == "Dream"
+                                      ? getDemandNumber(obj.demand) * obj.amount
+                                      : 0;
+                              })
+                              .reduce((a, b) => a + b) /
+                          $inventory
+                              .map((obj) =>
+                                  obj.rarity == "Exotic" ||
+                                  obj.rarity == "Mythic" ||
+                                  obj.rarity == "Dream"
+                                      ? obj.amount
+                                      : 0
+                              )
+                              .reduce((a, b) => a + b)
+                      ).toFixed(3)
                     : 0}
             />
             <StatCard
@@ -58,7 +91,11 @@
                     })
                     .reduce((a, b) => a + b, 0)}
             />
-            <StatCard title="Unique item count" value={$inventory.length} />
+            <StatCard
+                title="Item count"
+                tag="unique"
+                value={$inventory.length}
+            />
         </div>
     </div>
 </div>

@@ -113,12 +113,14 @@
                 transition:fade={{ duration: 100 }}
             >
                 <div class="absolute right-1 bottom-1 flex flex-col">
-                    <button class="item-button-small text-black" on:click={handlePlus}
-                        >+</button
+                    <button
+                        class="item-button-small text-black"
+                        on:click={handlePlus}>+</button
                     >
                     {#if context == "inventory"}
-                        <button class="item-button-small text-black" on:click={handleMinus}
-                            >-</button
+                        <button
+                            class="item-button-small text-black"
+                            on:click={handleMinus}>-</button
                         >
                     {/if}
                 </div>
@@ -137,11 +139,13 @@
                 <div class="absolute bottom-1">
                     <p class="text-xs">{item.rarity}</p>
                     <div class="font-bold text-sm">
-                        {#if isNaN(item.value)}
-                            <p>Worth {item.value}</p>
-                        {/if}
                         {#if item.exoticvalue !== "Unknown"}
-                            <p>{item.exoticvalue} exotics</p>
+                            <p class={isNaN(item.value)?"text-sm":""}>
+                                {#if isNaN(item.value)}
+                                    {item.value} /
+                                {/if}
+                                {item.exoticvalue} exotics
+                            </p>
                         {/if}
                     </div>
                     <p>{item.demand}</p>

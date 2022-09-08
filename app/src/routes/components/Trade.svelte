@@ -3,12 +3,8 @@
 </script>
 
 <div class="default w-full h-auto rounded p-2">
-    <h1 class="text-xl font-bold">Stats</h1>
+    <h1 class="text-xl font-bold">Trading calculator</h1>
     <p>
-        Total value: {$inventory
-            .map((obj) => {
-                return typeof obj.exoticvalue == "number" ? obj.exoticvalue : 0;
-            })
-            .reduce((a, b) => a + b, 0)}
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Vero ad voluptatibus sit facere aut laudantium fugit magni amet. Harum necessitatibus minus eveniet, doloribus quas a sit recusandae architecto distinctio non.
     </p>
 </div>
