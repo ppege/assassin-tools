@@ -11,12 +11,12 @@
         }, 750);
     };
     debounce();
-    const getFullInventoryLength = () => {
-        let length = 0;
-        for (const obj of $inventory) {
-            length = length + obj.amount;
-        }
-        return length;
+    const getDemandNumber = (demand: string): number => {
+        let arr: number[] = [];
+        demand.split("").forEach((char) => {
+            arr.push(char == "\u2605" ? 1 : 0);
+        });
+        return arr.reduce((a, b) => a + b);
     };
 </script>
 
@@ -29,7 +29,7 @@
     />
     <div class="max-w-[75ch] mx-auto px-5">
         <h1 class="text-xl font-bold">Stats</h1>
-        <div class="flex flex-wrap gap-2">
+        <div class="flex flex-wrap w-3/4 gap-2">
             <StatCard
                 title="Total value"
                 value={$inventory
@@ -42,11 +42,13 @@
             />
             <StatCard
                 title="Average demand"
-                value={$inventory
-                    .map((obj) => {
-                        return typeof obj.amount == "number" ? obj.amount : 0;
-                    })
-                    .reduce((a, b) => a + b, 0)}
+                value={$inventory.length
+                    ? $inventory
+                          .map((obj) => {
+                              return getDemandNumber(obj.demand);
+                          })
+                          .reduce((a, b) => a + b) / $inventory.length
+                    : 0}
             />
             <StatCard
                 title="Item count"
