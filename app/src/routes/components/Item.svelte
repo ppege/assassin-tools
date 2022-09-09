@@ -64,7 +64,9 @@
         fetch(
             `https://api.nangurepo.com/v2/assassin?code=${$code}&name=${names}`
         ).then(async () => {
-            $inventory = await getValues($code);
+            if ($inventory.length > 1) {
+                $inventory = await getValues($code);
+            }
             announceSaved();
         });
     };

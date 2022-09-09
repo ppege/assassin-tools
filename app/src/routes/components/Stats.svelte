@@ -18,6 +18,33 @@
         });
         return arr.reduce((a, b) => a + b);
     };
+    $: averageDemand = $inventory.length
+        ? (
+              $inventory
+                  .map((obj) => {
+                      return getDemandNumber(obj.demand) * obj.amount;
+                  })
+                  .reduce((a, b) => a + b) /
+              $inventory.map((obj) => obj.amount).reduce((a, b) => a + b)
+          ).toFixed(3)
+        : 0;
+    $: valueDensity = $inventory.length
+        ? (
+              $inventory
+                  .map((obj) => {
+                      return typeof obj.exoticvalue == "number"
+                          ? obj.exoticvalue * obj.amount
+                          : 0;
+                  })
+                  .reduce((a, b) => a + b, 0) /
+              $inventory.map((obj) => obj.amount).reduce((a, b) => a + b)
+          ).toFixed(3)
+        : 0;
+    $: getTradability = (): number => {
+        const demandScore = (averageDemand / 5) * 100;
+        const densityScore = (valueDensity / 30) * 100;
+        return (demandScore + densityScore) / 2;
+    };
 </script>
 
 <div class="default relative w-full h-auto rounded p-2">
@@ -41,25 +68,18 @@
                     .reduce((a, b) => a + b, 0) + " exotics"}
             />
             <StatCard
-                title="Average demand"
-                value={$inventory.length
-                    ? (
-                          $inventory
-                              .map((obj) => {
-                                  return (
-                                      getDemandNumber(obj.demand) * obj.amount
-                                  );
-                              })
-                              .reduce((a, b) => a + b) /
-                          $inventory
-                              .map((obj) => obj.amount)
-                              .reduce((a, b) => a + b)
-                      ).toFixed(3)
-                    : 0}
+                title="Value density"
+                tag={{ text: "?", description: "The average value per knife" }}
+                value={valueDensity}
             />
+            <StatCard title="Average demand" value={averageDemand} />
             <StatCard
                 title="Average demand"
-                tag="exotic+"
+                tag={{
+                    text: "exotic+",
+                    description:
+                        "Only counts demand of exotics, mythics and dreams",
+                }}
                 value={$inventory.length
                     ? (
                           $inventory
@@ -93,9 +113,13 @@
             />
             <StatCard
                 title="Item count"
-                tag="unique"
+                tag={{
+                    text: "unique",
+                    description: "Unique items in your inventory - no stacks",
+                }}
                 value={$inventory.length}
             />
+            <StatCard title="Tradability" value={getTradability().toFixed(3) + "%"} />
         </div>
     </div>
 </div>
