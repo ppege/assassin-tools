@@ -1,7 +1,7 @@
 <script lang="ts">
     import { getValues } from "./getValues";
     import { fade } from "svelte/transition";
-    import { inventory, code, saved } from "./stores";
+    import { inventory, code, saved, activeItem } from "./stores";
     import type { item } from "./stores";
     export let context: string;
     export let item: item;
@@ -141,14 +141,17 @@
                 <div class="absolute bottom-1">
                     <p class="text-xs">{item.rarity}</p>
                     <div class="font-bold text-sm">
-                        {#if item.exoticvalue !== "Unknown"}
-                            <p class={isNaN(item.value)?"text-sm":""}>
-                                {#if isNaN(item.value)}
-                                    {item.value} /
-                                {/if}
+                        <p class={isNaN(item.value) ? "text-sm" : ""}>
+                            {#if isNaN(item.value)}
+                                {item.value}
+                            {/if}
+                            {#if isNaN(item.value) && item.exoticvalue !== "Unknown"}
+                                /
+                            {/if}
+                            {#if item.exoticvalue !== "Unknown"}
                                 {item.exoticvalue} exotics
-                            </p>
-                        {/if}
+                            {/if}
+                        </p>
                     </div>
                     <p>{item.demand}</p>
                 </div>
@@ -156,12 +159,18 @@
         {/if}
         {#if item.amount !== 1 && context == "inventory"}
             {#key item.amount}
-                <p
-                    class="absolute right-1 top-[0.1rem] font-mono font-bold z-20 text-white"
-                    transition:fade={{ duration: 100 }}
+                <div
+                    class="absolute flex flex-col right-1 top-[0.1rem] font-mono font-bold z-20 text-white text-right"
                 >
-                    {item.amount}
-                </p>
+                    <p transition:fade={{ duration: 100 }}>
+                        {item.amount}
+                    </p>
+                    {#if visible}
+                        <p class="font-normal text-yellow-300 -mt-1" transition:fade={{ duration: 100 }}>
+                            {item.exoticvalue * item.amount}
+                        </p>
+                    {/if}
+                </div>
             {/key}
         {/if}
         <img

@@ -37,7 +37,7 @@
     />
     {#if results.length}
         <div
-            class="mt-1 flex flex-wrap gap-1 justify-center"
+            class="mt-1 flex flex-wrap gap-[0.1rem] justify-center"
             transition:fade={{ duration: 200 }}
         >
             {#each results as item}

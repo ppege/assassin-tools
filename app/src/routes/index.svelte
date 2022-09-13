@@ -19,9 +19,9 @@
             <div class="h-1/2">
                 <Search />
             </div>
-            <div class="h-1/2">
+            <!-- <div class="h-1/2">
                 <Trade />
-            </div>
+            </div> -->
         </div>
     </div>
 </body>

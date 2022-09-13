@@ -7,6 +7,7 @@
     export let title: string;
     export let value: string | number;
     export let tag: tag | null = null;
+    export let styling: string | null = null;
     let visible: boolean = false;
 </script>
 
@@ -23,13 +24,13 @@
                 on:mouseenter={() => (visible = true)}
                 on:mouseleave={() => (visible = false)}
                 on:focus={() => (visible = true)}
-                class="rounded h-fit w-fit px-1 bg-red-400 text-white dark:text-black"
+                class="rounded h-fit w-fit px-1 bg-red-400 {!styling?"text-white":""} dark:text-black {styling}"
             >
                 <p class="text-xs shadow-sm select-none">{tag.text}</p>
             </div>
             {#if visible}
                 <div
-                    class="absolute mb-24 bg-black/50 backdrop-blur-sm text-white break-words max-w-[20ch] rounded h-auto w-auto px-1 py-1"
+                    class="absolute mb-24 ml-28 bg-black/50 backdrop-blur-sm text-white break-words max-w-[40ch] rounded h-auto w-auto px-1 py-1"
                     transition:fade={{ duration: 100 }}
                 >
                     <p>{tag.description}</p>
