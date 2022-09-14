@@ -167,7 +167,7 @@
                 tag={{
                     text: getTradability().text,
                     description:
-                        "Tradability is a guess, more so a shot in the dark, at pinpointing how tradable your inventory is, or in other words, how easy it is to get good trades with. This is calculated by with your average demand out of 5 and your value density out of 20. So if you have only 5 star demand knives with over 20 value, your tradability is 100%",
+                        "Tradability is a shot in the dark at pinpointing how tradable your inventory is, and how easy it is to get good trades with. This is calculated with your average demand out of 5 and your value density out of 20. So if you have only 5 star demand knives with over 20 value, your tradability is 100%",
                 }}
                 value={getTradability().score.toFixed(3) + "%"}
                 styling={getTradability().color}

@@ -114,7 +114,7 @@
                 class="absolute block top-0 bottom-0 left-0 right-0 p-1 bg-black/25 text-white backdrop-blur z-10"
                 transition:fade={{ duration: 100 }}
             >
-                <div class="absolute right-1 bottom-1 flex flex-col">
+                <div class="absolute right-1 bottom-1 h-auto flex flex-col">
                     <button
                         class="item-button-small text-black"
                         on:click={handlePlus}>+</button
@@ -123,6 +123,10 @@
                         <button
                             class="item-button-small text-black"
                             on:click={handleMinus}>-</button
+                        >
+                        <button
+                            class="item-button-small text-black"
+                            on:click={handleMinus}>💣</button
                         >
                     {/if}
                 </div>
@@ -166,7 +170,10 @@
                         {item.amount}
                     </p>
                     {#if visible}
-                        <p class="font-normal text-yellow-300 -mt-1" transition:fade={{ duration: 100 }}>
+                        <p
+                            class="font-normal text-yellow-300 -mt-1"
+                            transition:fade={{ duration: 100 }}
+                        >
                             {item.exoticvalue * item.amount}
                         </p>
                     {/if}

@@ -2,7 +2,7 @@
 @tailwind components;
 
 .item-button-small {
-    @apply w-auto h-min px-1 bg-white text-xs rounded border border-slate-300 items-center justify-center hover:bg-slate-100 active:bg-slate-200;
+    @apply w-auto h-auto px-1 py-[0.12rem] bg-white text-xs rounded border border-slate-300 items-center justify-center hover:bg-gray-700 hover:text-white active:bg-gray-800;
 }
 
 .default {

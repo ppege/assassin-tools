@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { fade } from "svelte/transition";
+    import Tooltip, { Wrapper } from "@smui/tooltip";
     interface tag {
         text: string;
         description: string;
@@ -8,7 +8,6 @@
     export let value: string | number;
     export let tag: tag | null = null;
     export let styling: string | null = null;
-    let visible: boolean = false;
 </script>
 
 <div
@@ -17,25 +16,20 @@
     <p class="text-sm font-medium text-gray-600 dark:text-gray-400">
         {title}
     </p>
-    <div class="flex flex-row items-center gap-1">
+    <div class="flex flex-row container items-center gap-1">
         <p class="font-semibold text-gray-700 dark:text-gray-100">{value}</p>
         {#if tag}
-            <div
-                on:mouseenter={() => (visible = true)}
-                on:mouseleave={() => (visible = false)}
-                on:focus={() => (visible = true)}
-                class="rounded h-fit w-fit px-1 bg-red-400 {!styling?"text-white":""} dark:text-black {styling}"
-            >
-                <p class="text-xs shadow-sm select-none">{tag.text}</p>
-            </div>
-            {#if visible}
+            <Wrapper>
                 <div
-                    class="absolute mb-24 ml-28 bg-black/50 backdrop-blur-sm text-white break-words max-w-[40ch] rounded h-auto w-auto px-1 py-1"
-                    transition:fade={{ duration: 100 }}
+                    tabindex="0"
+                    class="rounded h-fit w-fit px-1 bg-red-400 {!styling
+                        ? 'text-white'
+                        : ''} dark:text-black {styling}"
                 >
-                    <p>{tag.description}</p>
+                    <p class="text-xs shadow-sm select-none">{tag.text}</p>
                 </div>
-            {/if}
+                <Tooltip>{tag.description}</Tooltip>
+            </Wrapper>
         {/if}
     </div>
 </div>
