@@ -9,14 +9,14 @@
 <body class="dark:bg-slate-800">
     <div class="w-full h-screen max-h-screen flex flex-row p-1">
         <div class="flex flex-col w-full">
-            <div class="h-[75vh]">
+            <div class="h-[60vh]">
                 <Inventory />
             </div>
             <div class="h-auto flex flex-row">
                 <div class="w-3/4 h-full">
                     <Stats />
                 </div>
-                <div class="w-1/4 h-full">
+                <div class="w-auto h-full">
                     <Actions />
                 </div>
             </div>

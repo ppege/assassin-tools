@@ -3,17 +3,44 @@
     import Button, { Label } from "@smui/button";
     import Textfield from "@smui/textfield";
     import HelperText from "@smui/textfield/helper-text";
-    let tradeRequestDialogStep1 = false;
-    let tradeRequestDialogStep2 = false;
+    import Paper, {
+        Title as PaperTitle,
+        Content as PaperContent,
+    } from "@smui/paper";
+    import type { MenuComponentDev } from "@smui/menu";
+    import Menu from "@smui/menu";
+    import { Anchor } from "@smui/menu-surface";
+    import List, {
+        Item,
+        Separator,
+        Text,
+        PrimaryText,
+        SecondaryText,
+    } from "@smui/list";
+    let menu: MenuComponentDev;
+    let anchor: HTMLDivElement;
+    let anchorClasses: { [k: string]: boolean } = {};
+    import { inventory, code } from "./stores";
+    import { getValues } from "./getValues";
+    let requestDialog = false;
+    let codeDialog = false;
+    let adDialog = false;
     let focused = false;
+    let focused2 = false;
     let value = "";
-    const tradeRequest = () => {
-        tradeRequestDialogStep1 = true;
+    let timer: any;
+    const debounce = () => {
+        $inventory = [];
+        clearTimeout(timer);
+        timer = setTimeout(async () => {
+            $inventory = await getValues($code);
+        }, 250);
     };
+    debounce();
 </script>
 
 <Dialog
-    bind:tradeRequestDialogStep1
+    bind:open={requestDialog}
     aria-labelledby="simple-title"
     aria-describedby="simple-content"
 >
@@ -35,22 +62,104 @@
         <Button>
             <Label>Cancel</Label>
         </Button>
-        <Button on:click={()=>{
-            tradeRequestDialogStep1 = false;
-            tradeRequestDialogStep2 = true;
-        }}>
+        <Button>
             <Label>Next</Label>
         </Button>
     </Actions>
 </Dialog>
-<div class="default relative w-full h-full rounded p-2">
-    <h1 class="font-bold text-xl">Actions</h1>
-    <div class="flex flex-col w-full gap-1">
-        <button class="action-button" on:click={tradeRequest}
-            >Trade request</button
+<Dialog
+    bind:open={codeDialog}
+    aria-labelledby="simple-title"
+    aria-describedby="simple-content"
+>
+    <Title>Set inventory code</Title>
+    <Content>
+        <Textfield
+            type="text"
+            bind:value={$code}
+            on:keyup={debounce}
+            label="Inventory code"
+            on:focus={() => (focused2 = true)}
+            on:blur={() => (focused2 = false)}
+        />
+    </Content>
+    <Actions>
+        <Button>
+            <Label>Done</Label>
+        </Button>
+    </Actions>
+</Dialog>
+<Dialog
+    bind:open={adDialog}
+    aria-labelledby="simple-title"
+    aria-describedby="simple-content"
+>
+    <Title>Generate trade ad</Title>
+    <Content>
+        <p>Select the items you are trading.</p>
+    </Content>
+</Dialog>
+<Paper>
+    <PaperTitle>Actions</PaperTitle>
+    <PaperContent>
+        <div
+            class={Object.keys(anchorClasses).join(" ")}
+            use:Anchor={{
+                addClass: (className) => {
+                    if (!anchorClasses[className]) {
+                        anchorClasses[className] = true;
+                    }
+                },
+                removeClass: (className) => {
+                    if (anchorClasses[className]) {
+                        delete anchorClasses[className];
+                        anchorClasses = anchorClasses;
+                    }
+                },
+            }}
+            bind:this={anchor}
         >
-        <button class="action-button">bar</button>
-        <button class="action-button">foo</button>
-        <button class="action-button">bar</button>
-    </div>
-</div>
+            <Button on:click={() => menu.setOpen(true)}>
+                <Label>View Actions</Label>
+            </Button>
+            <Menu
+                bind:this={menu}
+                anchor={false}
+                bind:anchorElement={anchor}
+                anchorCorner="BOTTOM_LEFT"
+            >
+                <List twoLine>
+                    <Item on:SMUI:action={() => (codeDialog = true)}>
+                        <Text>
+                            <PrimaryText>Set code</PrimaryText>
+                            <SecondaryText>Set the inventory code</SecondaryText
+                            >
+                        </Text>
+                    </Item>
+                    <Item on:SMUI:action={() => (requestDialog = true)}>
+                        <Text>
+                            <PrimaryText>Trade request</PrimaryText>
+                            <SecondaryText>Send a trade request</SecondaryText>
+                        </Text>
+                    </Item>
+                    <Item>
+                        <Text>
+                            <PrimaryText>Trade ad</PrimaryText>
+                            <SecondaryText
+                                >Generate a trade ad for use in the Assassin!
+                                discord</SecondaryText
+                            >
+                        </Text>
+                    </Item>
+                    <Separator />
+                    <Item>
+                        <Text>
+                            <PrimaryText>Delete</PrimaryText>
+                            <SecondaryText>Remove item.</SecondaryText>
+                        </Text>
+                    </Item>
+                </List>
+            </Menu>
+        </div>
+    </PaperContent>
+</Paper>

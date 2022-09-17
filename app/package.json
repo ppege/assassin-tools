@@ -20,6 +20,8 @@
 		"@smui/checkbox": "^6.1.0",
 		"@smui/dialog": "^6.1.0",
 		"@smui/fab": "^6.1.0",
+		"@smui/list": "^6.1.0",
+		"@smui/menu": "^6.1.0",
 		"@smui/paper": "^6.1.0",
 		"@smui/radio": "^6.1.0",
 		"@smui/textfield": "^6.1.0",
