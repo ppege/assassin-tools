@@ -1,8 +1,11 @@
 <script lang="ts">
+    import type { item } from "./stores";
     import Dialog, { Title, Content, Actions } from "@smui/dialog";
     import Button, { Label } from "@smui/button";
     import Textfield from "@smui/textfield";
     import HelperText from "@smui/textfield/helper-text";
+    import Autocomplete from "@smui-extra/autocomplete";
+
     import Paper, {
         Title as PaperTitle,
         Content as PaperContent,
@@ -29,6 +32,7 @@
     let focused2 = false;
     let value = "";
     let timer: any;
+    let chosenItem: string;
     const debounce = () => {
         $inventory = [];
         clearTimeout(timer);
@@ -97,6 +101,13 @@
     <Title>Generate trade ad</Title>
     <Content>
         <p>Select the items you are trading.</p>
+        <Autocomplete
+            combobox
+            options={$inventory.map((obj) => obj.name)}
+            bind:chosenItem
+            label="Items"
+            class="z-50"
+        />
     </Content>
 </Dialog>
 <Paper>

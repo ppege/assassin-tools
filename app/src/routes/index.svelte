@@ -13,7 +13,7 @@
                 <Inventory />
             </div>
             <div class="h-auto flex flex-row gap-1">
-                <div class="w-10/12 h-full">
+                <div class="w-3/4 h-full">
                     <Stats />
                 </div>
                 <div class="w-auto h-full">
