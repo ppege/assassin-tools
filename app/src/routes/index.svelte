@@ -6,10 +6,10 @@
     import Trade from "./components/Trade.svelte";
 </script>
 
-<body class="dark:bg-slate-800">
+<body>
     <div class="w-full h-screen max-h-screen flex flex-row p-1">
         <div class="flex flex-col w-full">
-            <div class="h-[60vh]">
+            <div class="h-[70vh]">
                 <Inventory />
             </div>
             <div class="h-auto flex flex-row">

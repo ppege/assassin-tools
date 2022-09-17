@@ -3,6 +3,7 @@
     import { fade } from "svelte/transition";
     import { inventory, code, saved, warn } from "./stores";
     import type { item } from "./stores";
+    import Card from "@smui/card"
     import Dialog, { Title, Content, Actions } from "@smui/dialog";
     import Button, { Label } from "@smui/button";
     import Checkbox from "@smui/checkbox";
@@ -14,19 +15,19 @@
     const colorFromRarity = (rarity: String) => {
         switch (rarity) {
             case "Common":
-                return "to-green-300";
+                return "bg-green-300";
             case "Rare":
-                return "to-blue-400";
+                return "bg-blue-400";
             case "Legendary":
-                return "to-purple-600";
+                return "bg-purple-600";
             case "Exotic":
-                return "to-orange-500";
+                return "bg-orange-500";
             case "Mythic":
-                return "to-red-500";
+                return "bg-red-500";
             case "Dream":
-                return "to-blue-200";
+                return "bg-blue-200";
             default:
-                return "to-black";
+                return "bg-black";
         }
     };
     const handleMouseover = () => {
@@ -119,7 +120,7 @@
     };
 </script>
 
-<div class="w-auto h-auto border-2 border-black">
+<Card>
     <Dialog
         bind:open
         aria-labelledby="simple-title"
@@ -139,14 +140,14 @@
         </Actions>
     </Dialog>
     <div
-        class="w-full h-auto relative block bg-gradient-to-t from-gray-800 to-gray-500"
+        class="w-full h-auto relative block"
         on:mouseover={handleMouseover}
         on:focus={handleMouseover}
         on:mouseleave={handleMouseleave}
     >
         {#if visible}
             <div
-                class="absolute block top-0 bottom-0 left-0 right-0 p-1 bg-black/25 text-white backdrop-blur z-[5]"
+                class="absolute block top-0 bottom-0 left-0 right-0 p-1 bg-white/50 dark:bg-black/25 backdrop-blur z-[5]"
                 transition:fade={{ duration: 100 }}
             >
                 <div class="absolute z-10 right-1 bottom-1 h-auto flex flex-col">
@@ -225,7 +226,7 @@
         />
     </div>
     <div
-        class={`w-full h-auto px-2 py-[0.05rem] bg-gradient-to-t from-gray-700 ${colorFromRarity(
+        class={`w-full h-auto px-2 py-[0.05rem] ${colorFromRarity(
             item.rarity
         )}`}
     >
@@ -237,4 +238,4 @@
             {item.name}
         </p>
     </div>
-</div>
+</Card>

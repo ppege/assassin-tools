@@ -12,7 +12,7 @@
     export let styling: string | null = null;
 </script>
 
-<Card class="p-0">
+<Card variant="outlined" class="p-0">
     <Content class="p-[0.33rem]">
         <p class="text-sm font-medium text-gray-600 dark:text-gray-400">
             {title}

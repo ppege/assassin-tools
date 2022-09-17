@@ -119,7 +119,7 @@
             }}
             bind:this={anchor}
         >
-            <Button on:click={() => menu.setOpen(true)}>
+            <Button variant="outlined" on:click={() => menu.setOpen(true)}>
                 <Label>View Actions</Label>
             </Button>
             <Menu
@@ -142,7 +142,7 @@
                             <SecondaryText>Send a trade request</SecondaryText>
                         </Text>
                     </Item>
-                    <Item>
+                    <Item on:SMUI:action={() => (adDialog = true)}>
                         <Text>
                             <PrimaryText>Trade ad</PrimaryText>
                             <SecondaryText
