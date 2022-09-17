@@ -32,7 +32,7 @@
     let focused2 = false;
     let value = "";
     let timer: any;
-    let chosenItem: string;
+    let chosenItem: string | undefined = undefined;
     const debounce = () => {
         $inventory = [];
         clearTimeout(timer);
@@ -100,13 +100,11 @@
 >
     <Title>Generate trade ad</Title>
     <Content>
-        <p>Select the items you are trading.</p>
         <Autocomplete
             combobox
             options={$inventory.map((obj) => obj.name)}
-            bind:chosenItem
+            bind:value={chosenItem}
             label="Items"
-            class="z-50"
         />
     </Content>
 </Dialog>
