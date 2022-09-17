@@ -202,14 +202,14 @@
         {#if item.amount > 1 && context == "inventory"}
             {#key item.amount}
                 <div
-                    class="absolute flex flex-col right-1 top-[0.1rem] font-mono font-bold z-[5] text-white text-right"
+                    class="absolute flex flex-col right-1 top-[0.1rem] font-mono font-bold z-[5] text-right"
                 >
                     <p transition:fade={{ duration: 100 }}>
                         {item.amount}
                     </p>
                     {#if visible}
                         <p
-                            class="font-normal text-yellow-300 -mt-1"
+                            class="font-normal text-yellow-500 dark:text-yellow-300 -mt-1"
                             transition:fade={{ duration: 100 }}
                         >
                             {item.exoticvalue * item.amount}
