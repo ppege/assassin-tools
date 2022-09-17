@@ -29,13 +29,18 @@ const defaultItem: item = {
     amount: 0,
 };
 
-export const activeItem = writable(defaultItem);
 export const code = writable(getString("code", ""));
 export const inventory = writable([defaultItem]);
 export const saved = writable(false);
+export const warn = writable(getString("warn", "true") == "true");
 
 code.subscribe((value) => {
     if (browser) {
         localStorage.setItem("code", value);
+    }
+});
+warn.subscribe((value) => {
+    if (browser) {
+        localStorage.setItem("warn", value==true?"true":"false");
     }
 });

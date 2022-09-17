@@ -1,11 +1,15 @@
 <script lang="ts">
     import { getValues } from "./getValues";
     import { fade } from "svelte/transition";
-    import { inventory, code, saved, activeItem } from "./stores";
+    import { inventory, code, saved, warn } from "./stores";
     import type { item } from "./stores";
+    import Dialog, { Title, Content, Actions } from "@smui/dialog";
+    import Button, { Label } from "@smui/button";
+    import Checkbox from "@smui/checkbox";
     export let context: string;
     export let item: item;
     let visible = false;
+    let open = false;
     $: image = item.name.toUpperCase().replace(/ /g, "_");
     const colorFromRarity = (rarity: String) => {
         switch (rarity) {
@@ -100,9 +104,40 @@
         });
         debounce(save);
     };
+    const handleNuke = (_: any, confirmed: boolean = false) => {
+        console.log($warn)
+        if ($warn) {
+            if (!confirmed) {
+                open = true;
+                return;
+            }
+        }
+        $inventory = $inventory.filter((obj) => {
+            return obj.name !== item.name;
+        });
+        debounce(save);
+    };
 </script>
 
 <div class="w-auto h-auto border-2 border-black">
+    <Dialog
+        bind:open
+        aria-labelledby="simple-title"
+        aria-describedby="simple-content"
+    >
+        <Title id="simple-title">You sure?</Title>
+        <Content id="simple-content">This will nuke the whole stack.</Content>
+        <Actions>
+            <Checkbox on:click={() => ($warn = !$warn)} />
+            <p class="text-sm text-gray-400">Don't remind me again</p>
+            <Button>
+                <Label>No</Label>
+            </Button>
+            <Button on:click={()=>handleNuke(null, true)}>
+                <Label>Yes</Label>
+            </Button>
+        </Actions>
+    </Dialog>
     <div
         class="w-full h-auto relative block bg-gradient-to-t from-gray-800 to-gray-500"
         on:mouseover={handleMouseover}
@@ -111,24 +146,26 @@
     >
         {#if visible}
             <div
-                class="absolute block top-0 bottom-0 left-0 right-0 p-1 bg-black/25 text-white backdrop-blur z-10"
+                class="absolute block top-0 bottom-0 left-0 right-0 p-1 bg-black/25 text-white backdrop-blur z-[5]"
                 transition:fade={{ duration: 100 }}
             >
-                <div class="absolute right-1 bottom-1 h-auto flex flex-col">
-                    <button
-                        class="item-button-small text-black"
-                        on:click={handlePlus}>+</button
-                    >
+                <div class="absolute z-10 right-1 bottom-1 h-auto flex flex-col">
                     {#if context == "inventory"}
+                        {#if item.amount > 1}
+                            <button
+                                class="item-button-small text-black"
+                                on:click={handleNuke}>💣</button
+                            >
+                        {/if}
                         <button
                             class="item-button-small text-black"
                             on:click={handleMinus}>-</button
                         >
-                        <button
-                            class="item-button-small text-black"
-                            on:click={handleMinus}>💣</button
-                        >
                     {/if}
+                    <button
+                        class="item-button-small text-black"
+                        on:click={handlePlus}>+</button
+                    >
                 </div>
                 <div class="absolute top-1 w-10/12">
                     <p
@@ -161,10 +198,10 @@
                 </div>
             </div>
         {/if}
-        {#if item.amount !== 1 && context == "inventory"}
+        {#if item.amount > 1 && context == "inventory"}
             {#key item.amount}
                 <div
-                    class="absolute flex flex-col right-1 top-[0.1rem] font-mono font-bold z-20 text-white text-right"
+                    class="absolute flex flex-col right-1 top-[0.1rem] font-mono font-bold z-[5] text-white text-right"
                 >
                     <p transition:fade={{ duration: 100 }}>
                         {item.amount}

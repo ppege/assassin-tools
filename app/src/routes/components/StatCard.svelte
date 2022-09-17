@@ -28,7 +28,8 @@
                 >
                     <p class="text-xs shadow-sm select-none">{tag.text}</p>
                 </div>
-                <Tooltip>{tag.description}</Tooltip>
+                <Tooltip>
+                    <p class="text-md">{tag.description}</p></Tooltip>
             </Wrapper>
         {/if}
     </div>

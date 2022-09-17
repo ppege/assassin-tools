@@ -16,9 +16,13 @@
 	},
 	"devDependencies": {
 		"@smui/button": "^6.1.0",
+		"@smui/card": "^6.1.0",
 		"@smui/checkbox": "^6.1.0",
+		"@smui/dialog": "^6.1.0",
 		"@smui/fab": "^6.1.0",
+		"@smui/paper": "^6.1.0",
 		"@smui/radio": "^6.1.0",
+		"@smui/textfield": "^6.1.0",
 		"@smui/tooltip": "^6.1.0",
 		"@sveltejs/adapter-auto": "next",
 		"@sveltejs/kit": "next",
@@ -42,7 +46,6 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"@smui/dialog": "^6.1.0",
 		"axios": "^0.27.2",
 		"jquery": "^3.6.0",
 		"svelte-material-ui": "^6.1.3"
