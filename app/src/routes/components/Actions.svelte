@@ -108,67 +108,60 @@
         />
     </Content>
 </Dialog>
-<Paper>
-    <PaperTitle>Actions</PaperTitle>
-    <PaperContent>
-        <div
-            class={Object.keys(anchorClasses).join(" ")}
-            use:Anchor={{
-                addClass: (className) => {
-                    if (!anchorClasses[className]) {
-                        anchorClasses[className] = true;
-                    }
-                },
-                removeClass: (className) => {
-                    if (anchorClasses[className]) {
-                        delete anchorClasses[className];
-                        anchorClasses = anchorClasses;
-                    }
-                },
-            }}
-            bind:this={anchor}
-        >
-            <Button variant="outlined" on:click={() => menu.setOpen(true)}>
-                <Label>View Actions</Label>
-            </Button>
-            <Menu
-                bind:this={menu}
-                anchor={false}
-                bind:anchorElement={anchor}
-                anchorCorner="BOTTOM_LEFT"
-            >
-                <List twoLine>
-                    <Item on:SMUI:action={() => (codeDialog = true)}>
-                        <Text>
-                            <PrimaryText>Set code</PrimaryText>
-                            <SecondaryText>Set the inventory code</SecondaryText
-                            >
-                        </Text>
-                    </Item>
-                    <Item on:SMUI:action={() => (requestDialog = true)}>
-                        <Text>
-                            <PrimaryText>Trade request</PrimaryText>
-                            <SecondaryText>Send a trade request</SecondaryText>
-                        </Text>
-                    </Item>
-                    <Item on:SMUI:action={() => (adDialog = true)}>
-                        <Text>
-                            <PrimaryText>Trade ad</PrimaryText>
-                            <SecondaryText
-                                >Generate a trade ad for use in the Assassin!
-                                discord</SecondaryText
-                            >
-                        </Text>
-                    </Item>
-                    <Separator />
-                    <Item>
-                        <Text>
-                            <PrimaryText>Delete</PrimaryText>
-                            <SecondaryText>Remove item.</SecondaryText>
-                        </Text>
-                    </Item>
-                </List>
-            </Menu>
-        </div>
-    </PaperContent>
-</Paper>
+<div
+    class={Object.keys(anchorClasses).join(" ")}
+    use:Anchor={{
+        addClass: (className) => {
+            if (!anchorClasses[className]) {
+                anchorClasses[className] = true;
+            }
+        },
+        removeClass: (className) => {
+            if (anchorClasses[className]) {
+                delete anchorClasses[className];
+                anchorClasses = anchorClasses;
+            }
+        },
+    }}
+    bind:this={anchor}
+>
+    <Button variant="outlined" on:click={() => menu.setOpen(true)}>
+        <Label>View Actions</Label>
+    </Button>
+    <Menu
+        bind:this={menu}
+        anchor={false}
+        bind:anchorElement={anchor}
+        anchorCorner="BOTTOM_LEFT"
+    >
+        <List twoLine>
+            <Item on:SMUI:action={() => (codeDialog = true)}>
+                <Text>
+                    <PrimaryText>Set code</PrimaryText>
+                    <SecondaryText>Set the inventory code</SecondaryText>
+                </Text>
+            </Item>
+            <Item on:SMUI:action={() => (requestDialog = true)}>
+                <Text>
+                    <PrimaryText>Trade request</PrimaryText>
+                    <SecondaryText>Send a trade request</SecondaryText>
+                </Text>
+            </Item>
+            <Item on:SMUI:action={() => (adDialog = true)}>
+                <Text>
+                    <PrimaryText>Trade ad</PrimaryText>
+                    <SecondaryText
+                        >Generate a trade ad for use in the Assassin! discord</SecondaryText
+                    >
+                </Text>
+            </Item>
+            <Separator />
+            <Item>
+                <Text>
+                    <PrimaryText>Delete</PrimaryText>
+                    <SecondaryText>Remove item.</SecondaryText>
+                </Text>
+            </Item>
+        </List>
+    </Menu>
+</div>

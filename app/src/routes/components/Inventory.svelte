@@ -20,13 +20,13 @@
     </div>
     {#if $inventory.length}
         <div
-            class="overflow-scroll h-full flex flex-wrap gap-1 justify-center"
+            class="overflow-scroll h-full flex flex-wrap gap-1"
             transition:fade={{ duration: 200 }}
         >
             {#each $inventory as item}
-            <div class="h-auto">
-                <Item {item} context="inventory" />
-            </div>
+                <div class="h-auto w-auto">
+                    <Item {item} context="inventory" />
+                </div>
             {/each}
         </div>
     {/if}

@@ -3,10 +3,24 @@
     import { fade } from "svelte/transition";
     import { inventory, code, saved, warn } from "./stores";
     import type { item } from "./stores";
-    import Card from "@smui/card"
+    import Card from "@smui/card";
     import Dialog, { Title, Content, Actions } from "@smui/dialog";
     import Button, { Label } from "@smui/button";
     import Checkbox from "@smui/checkbox";
+    import type { MenuComponentDev } from "@smui/menu";
+    import Menu from "@smui/menu";
+    import { Anchor } from "@smui/menu-surface";
+    import List, {
+        Item,
+        Separator,
+        Graphic,
+        Text,
+        PrimaryText,
+        SecondaryText,
+    } from "@smui/list";
+    let menu: MenuComponentDev;
+    let anchor: HTMLDivElement;
+    let anchorClasses: { [k: string]: boolean } = {};
     export let context: string;
     export let item: item;
     let visible = false;
@@ -49,7 +63,7 @@
         clearTimeout(timer);
         timer = setTimeout(async () => {
             func();
-        }, 750);
+        }, 2000);
     };
     const announceSaved = () => {
         $saved = true;
@@ -106,7 +120,7 @@
         debounce(save);
     };
     const handleNuke = (_: any, confirmed: boolean = false) => {
-        console.log($warn)
+        console.log($warn);
         if ($warn) {
             if (!confirmed) {
                 open = true;
@@ -120,122 +134,169 @@
     };
 </script>
 
-<Card>
-    <Dialog
-        bind:open
-        aria-labelledby="simple-title"
-        aria-describedby="simple-content"
-    >
-        <Title id="simple-title">You sure?</Title>
-        <Content id="simple-content">This will nuke the whole stack.</Content>
-        <Actions>
-            <Checkbox on:click={() => ($warn = !$warn)} />
-            <p class="text-sm text-gray-400">Don't remind me again</p>
-            <Button>
-                <Label>No</Label>
-            </Button>
-            <Button on:click={()=>handleNuke(null, true)}>
-                <Label>Yes</Label>
-            </Button>
-        </Actions>
-    </Dialog>
-    <div
-        class="w-full h-auto relative block"
-        on:mouseover={handleMouseover}
-        on:focus={handleMouseover}
-        on:mouseleave={handleMouseleave}
-    >
-        {#if visible}
-            <div
-                class="absolute block top-0 bottom-0 left-0 right-0 p-1 bg-white/50 dark:bg-black/25 backdrop-blur z-[5]"
-                transition:fade={{ duration: 100 }}
+<div
+    class={Object.keys(anchorClasses).join(" ")}
+    use:Anchor={{
+        addClass: (className) => {
+            if (!anchorClasses[className]) {
+                anchorClasses[className] = true;
+            }
+        },
+        removeClass: (className) => {
+            if (anchorClasses[className]) {
+                delete anchorClasses[className];
+                anchorClasses = anchorClasses;
+            }
+        },
+    }}
+    bind:this={anchor}
+>
+    <div on:contextmenu|preventDefault={() => menu.setOpen(true)}>
+        <Card>
+            <Dialog
+                bind:open
+                aria-labelledby="simple-title"
+                aria-describedby="simple-content"
             >
-                <div class="absolute z-10 right-1 bottom-1 h-auto flex flex-col">
-                    {#if context == "inventory"}
-                        {#if item.amount > 1}
+                <Title id="simple-title">You sure?</Title>
+                <Content id="simple-content">
+                    This will nuke the whole stack.
+                </Content>
+                <Actions>
+                    <Checkbox on:click={() => ($warn = !$warn)} />
+                    <p class="text-sm text-gray-400">Don't remind me again</p>
+                    <Button>
+                        <Label>No</Label>
+                    </Button>
+                    <Button on:click={() => handleNuke(null, true)}>
+                        <Label>Yes</Label>
+                    </Button>
+                </Actions>
+            </Dialog>
+            <div
+                class="w-full h-auto relative block"
+                on:mouseover={handleMouseover}
+                on:focus={handleMouseover}
+                on:mouseleave={handleMouseleave}
+            >
+                {#if visible}
+                    <div
+                        class="absolute block top-0 bottom-0 left-0 right-0 p-1 bg-white/50 dark:bg-black/25 backdrop-blur z-[5]"
+                        transition:fade={{ duration: 100 }}
+                    >
+                        <div
+                            class="absolute z-10 right-1 bottom-1 h-auto flex flex-col"
+                        >
+                            {#if context == "inventory"}
+                                {#if item.amount > 1}
+                                    <button
+                                        class="item-button-small text-black"
+                                        on:click={handleNuke}>💣</button
+                                    >
+                                {/if}
+                                <button
+                                    class="item-button-small text-black"
+                                    on:click={handleMinus}>-</button
+                                >
+                            {/if}
                             <button
                                 class="item-button-small text-black"
-                                on:click={handleNuke}>💣</button
+                                on:click={handlePlus}>+</button
                             >
-                        {/if}
-                        <button
-                            class="item-button-small text-black"
-                            on:click={handleMinus}>-</button
-                        >
-                    {/if}
-                    <button
-                        class="item-button-small text-black"
-                        on:click={handlePlus}>+</button
-                    >
-                </div>
-                <div class="absolute top-1 w-10/12">
-                    <p
-                        class={String(item.origin).length >= 25
-                            ? "text-[0.5rem]"
-                            : "text-xs"}
-                    >
-                        {item.origin}
-                    </p>
-                    <p class="text-[0.4rem]">
-                        {item.obtain}
-                    </p>
-                </div>
-                <div class="absolute bottom-1">
-                    <p class="text-xs">{item.rarity}</p>
-                    <div class="font-bold text-sm">
-                        <p class={isNaN(item.value) ? "text-sm" : ""}>
-                            {#if isNaN(item.value)}
-                                {item.value}
-                            {/if}
-                            {#if isNaN(item.value) && item.exoticvalue !== "Unknown"}
-                                /
-                            {/if}
-                            {#if item.exoticvalue !== "Unknown"}
-                                {item.exoticvalue} exotics
-                            {/if}
-                        </p>
+                        </div>
+                        <div class="absolute top-1 w-10/12">
+                            <p
+                                class={String(item.origin).length >= 25
+                                    ? "text-[0.5rem]"
+                                    : "text-xs"}
+                            >
+                                {item.origin}
+                            </p>
+                            <p class="text-[0.4rem]">
+                                {item.obtain}
+                            </p>
+                        </div>
+                        <div class="absolute bottom-1">
+                            <p class="text-xs">{item.rarity}</p>
+                            <div class="font-bold text-sm">
+                                <p class={isNaN(item.value) ? "text-sm" : ""}>
+                                    {#if isNaN(item.value)}
+                                        {item.value}
+                                    {/if}
+                                    {#if isNaN(item.value) && item.exoticvalue !== "Unknown"}
+                                        /
+                                    {/if}
+                                    {#if item.exoticvalue !== "Unknown"}
+                                        {item.exoticvalue} exotics
+                                    {/if}
+                                </p>
+                            </div>
+                            <p>{item.demand}</p>
+                        </div>
                     </div>
-                    <p>{item.demand}</p>
-                </div>
-            </div>
-        {/if}
-        {#if item.amount > 1 && context == "inventory"}
-            {#key item.amount}
-                <div
-                    class="absolute flex flex-col right-1 top-[0.1rem] font-mono font-bold z-[5] text-right"
-                >
-                    <p transition:fade={{ duration: 100 }}>
-                        {item.amount}
-                    </p>
-                    {#if visible}
-                        <p
-                            class="font-normal text-yellow-500 dark:text-yellow-300 -mt-1"
-                            transition:fade={{ duration: 100 }}
+                {/if}
+                {#if item.amount > 1 && context == "inventory"}
+                    {#key item.amount}
+                        <div
+                            class="absolute flex flex-col right-1 top-[0.1rem] font-mono font-bold z-[5] text-right"
                         >
-                            {item.exoticvalue * item.amount}
-                        </p>
-                    {/if}
-                </div>
-            {/key}
-        {/if}
-        <img
-            on:error={handleImgError}
-            class="w-32 h-auto"
-            src={"images/" + image + ".png"}
-            alt="knife"
-        />
+                            <p transition:fade={{ duration: 100 }}>
+                                {item.amount}
+                            </p>
+                            {#if visible}
+                                <p
+                                    class="font-normal text-yellow-500 dark:text-yellow-300 -mt-1"
+                                    transition:fade={{ duration: 100 }}
+                                >
+                                    {item.exoticvalue * item.amount}
+                                </p>
+                            {/if}
+                        </div>
+                    {/key}
+                {/if}
+                <img
+                    on:error={handleImgError}
+                    class="w-32 h-auto"
+                    src={"images/" + image + ".png"}
+                    alt="knife"
+                />
+            </div>
+            <div
+                class={`w-full h-auto px-2 py-[0.05rem] ${colorFromRarity(
+                    item.rarity
+                )}`}
+            >
+                <p
+                    class={`font-semibold text-center text-white ${
+                        item.name.length >= 12 ? "text-sm py-[2px]" : "text-md"
+                    }`}
+                >
+                    {item.name}
+                </p>
+            </div>
+        </Card>
     </div>
-    <div
-        class={`w-full h-auto px-2 py-[0.05rem] ${colorFromRarity(
-            item.rarity
-        )}`}
+    <Menu
+        bind:this={menu}
+        anchor={false}
+        bind:anchorElement={anchor}
+        anchorCorner="BOTTOM_LEFT"
     >
-        <p
-            class={`font-semibold text-center text-white ${
-                item.name.length >= 12 ? "text-sm py-[2px]" : "text-md"
-            }`}
-        >
-            {item.name}
-        </p>
-    </div>
-</Card>
+        <List twoLine>
+            <Item>
+                <Graphic class="material-icons" aria-hidden="true">star</Graphic>
+                <Text>
+                    <PrimaryText>Favorite</PrimaryText>
+                    <SecondaryText>Add to favorites</SecondaryText>
+                </Text>
+            </Item>
+            <Item>
+                <Graphic class="material-icons" aria-hidden="true">repeat</Graphic>
+                <Text>
+                    <PrimaryText>Trading</PrimaryText>
+                    <SecondaryText>Mark as available for trade</SecondaryText>
+                </Text>
+            </Item>
+        </List>
+    </Menu>
+</div>
