@@ -8,8 +8,17 @@ export const getValues = async (code: string): Promise<item[]> => {
             `https://api.nangurepo.com/v2/assassin?limit=1&name=${names}`
         )
     ).json();
-    return generateStacks(Array.isArray(data) ? data : []);
+    return fillAttr(generateStacks(Array.isArray(data) ? data : []));
 };
+const fillAttr = (arr: item[]) => {
+    for (const obj of arr) {
+        obj.attr = {
+            favorite: false,
+            trading: false
+        }
+    }
+    return arr;
+}
 const generateStacks = (arr: item[]) => {
     const results = [];
     let prevItem: item = arr[0];

@@ -17,6 +17,10 @@ export type item = {
     obtain: string;
     origin: string;
     amount: number;
+    attr: {
+        favorite: boolean;
+        trading: boolean;
+    };
 };
 const defaultItem: item = {
     name: "",
@@ -27,12 +31,16 @@ const defaultItem: item = {
     obtain: "",
     origin: "",
     amount: 0,
+    attr: {
+        favorite: false,
+        trading: false,
+    },
 };
 
 export const code = writable(getString("code", ""));
 export const inventory = writable([defaultItem]);
-export const saved = writable(false);
 export const warn = writable(getString("warn", "true") == "true");
+export const codeDialog = writable(false);
 
 code.subscribe((value) => {
     if (browser) {
@@ -41,6 +49,6 @@ code.subscribe((value) => {
 });
 warn.subscribe((value) => {
     if (browser) {
-        localStorage.setItem("warn", value==true?"true":"false");
+        localStorage.setItem("warn", value == true ? "true" : "false");
     }
 });

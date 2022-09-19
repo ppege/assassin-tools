@@ -23,13 +23,13 @@
     let menu: MenuComponentDev;
     let anchor: HTMLDivElement;
     let anchorClasses: { [k: string]: boolean } = {};
-    import { inventory, code } from "./stores";
+    import { inventory, code, codeDialog } from "./stores";
     import { getValues } from "./getValues";
     let requestDialog = false;
-    let codeDialog = false;
     let adDialog = false;
     let focused = false;
     let focused2 = false;
+    let focused3 = false;
     let value = "";
     let timer: any;
     let chosenItem: string | undefined = undefined;
@@ -41,6 +41,16 @@
         }, 250);
     };
     debounce();
+    $: generateTradeAd = () => {
+        const obj = $inventory
+            .filter((obj) => obj.attr.trading)
+            .map(
+                (obj) =>
+                    obj.amount + " " + obj.name + (obj.amount > 1 ? "s" : "")
+            );
+        return obj.join(", ");
+    };
+    $: ad = generateTradeAd();
 </script>
 
 <Dialog
@@ -72,7 +82,7 @@
     </Actions>
 </Dialog>
 <Dialog
-    bind:open={codeDialog}
+    bind:open={$codeDialog}
     aria-labelledby="simple-title"
     aria-describedby="simple-content"
 >
@@ -100,11 +110,12 @@
 >
     <Title>Generate trade ad</Title>
     <Content>
-        <Autocomplete
-            combobox
-            options={$inventory.map((obj) => obj.name)}
-            bind:value={chosenItem}
-            label="Items"
+        <Textfield
+            textarea
+            value={ad}
+            label="Your trade ad"
+            on:focus={() => (focused3 = true)}
+            on:blur={() => (focused3 = false)}
         />
     </Content>
 </Dialog>
@@ -135,7 +146,7 @@
         anchorCorner="BOTTOM_LEFT"
     >
         <List twoLine>
-            <Item on:SMUI:action={() => (codeDialog = true)}>
+            <Item on:SMUI:action={() => ($codeDialog = true)}>
                 <Text>
                     <PrimaryText>Set code</PrimaryText>
                     <SecondaryText>Set the inventory code</SecondaryText>
@@ -153,13 +164,6 @@
                     <SecondaryText
                         >Generate a trade ad for use in the Assassin! discord</SecondaryText
                     >
-                </Text>
-            </Item>
-            <Separator />
-            <Item>
-                <Text>
-                    <PrimaryText>Delete</PrimaryText>
-                    <SecondaryText>Remove item.</SecondaryText>
                 </Text>
             </Item>
         </List>

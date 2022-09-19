@@ -3,17 +3,18 @@
     import Search from "./components/Search.svelte";
     import Stats from "./components/Stats.svelte";
     import Trade from "./components/Trade.svelte";
+    let codeDialog = false;
 </script>
 
 <body>
     <div class="w-full h-screen max-h-screen flex flex-col lg:flex-row p-1">
-        <div class="flex flex-col w-full">
+        <div class="flex flex-col gap-1 w-full">
             <div class="h-[70vh]">
-                <Inventory />
+                <Inventory {codeDialog} />
             </div>
             <div class="h-auto flex flex-row gap-1">
                 <div class="w-full h-full">
-                    <Stats />
+                    <Stats {codeDialog} />
                 </div>
             </div>
         </div>

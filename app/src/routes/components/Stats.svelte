@@ -8,7 +8,6 @@
         score: number;
         color: string;
     }
-
     const getDemandNumber = (demand: string): number => {
         let arr: number[] = [];
         demand.split("").forEach((char) => {
@@ -157,6 +156,6 @@
             value={getTradability().score.toFixed(3) + "%"}
             styling={getTradability().color}
         />
-        <Actions />
+        <Actions/>
     </Content>
 </Paper>
