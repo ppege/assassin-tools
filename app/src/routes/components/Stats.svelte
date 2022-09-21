@@ -1,8 +1,7 @@
 <script lang="ts">
     import { inventory } from "./stores";
     import StatCard from "./StatCard.svelte";
-    import Actions from "./Actions.svelte";
-    import Paper, { Title, Subtitle, Content } from "@smui/paper";
+    import Paper, { Title, Content } from "@smui/paper";
     interface tradability {
         text: string;
         score: number;
@@ -156,6 +155,5 @@
             value={getTradability().score.toFixed(3) + "%"}
             styling={getTradability().color}
         />
-        <Actions/>
     </Content>
 </Paper>

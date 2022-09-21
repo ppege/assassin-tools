@@ -182,27 +182,38 @@
                     >
                 </div>
                 <div class="absolute top-1 flex flex-row gap-[1px] w-10/12">
-                    <button
-                        on:click={() => toggle("favorite")}
-                        class="item-button-small text-black hover:bg-yellow-100 active:bg-yellow-50 {item
-                            .attr.favorite
-                            ? 'bg-yellow-200'
-                            : null}"
-                    >
-                        ⭐️
-                    </button>
-                    <button
-                        on:click={() => toggle("trading")}
-                        class="item-button-small text-black hover:bg-green-100 active:bg-green-50 {item
-                            .attr.trading
-                            ? 'bg-green-200'
-                            : null}"
-                    >
-                        ♻️
-                    </button>
+                    {#if context == "inventory"}
+                        <button
+                            on:click={() => toggle("favorite")}
+                            class="item-button-small text-black hover:bg-yellow-100 active:bg-yellow-50 {item
+                                .attr.favorite
+                                ? 'bg-yellow-200'
+                                : null}"
+                        >
+                            ⭐️
+                        </button>
+                        <button
+                            on:click={() => toggle("trading")}
+                            class="item-button-small text-black hover:bg-green-100 active:bg-green-50 {item
+                                .attr.trading
+                                ? 'bg-green-200'
+                                : null}"
+                        >
+                            ♻️
+                        </button>
+                    {:else}
+                        <div class="flex flex-col">
+                            <p class="text-[0.4rem] font-semibold">{item.obtain}</p>
+                            <p class="text-[0.4rem]">{item.origin}</p>
+                        </div>
+                    {/if}
                 </div>
                 <div class="absolute bottom-1">
-                    <p class="text-[0.4rem]">{item.obtain}</p>
+                    {#if context == "inventory"}
+                        <p class="text-[0.4rem]">
+                            {item.obtain}
+                        </p>
+                    {/if}
                     <p class="text-xs">{item.rarity}</p>
                     <div class="font-bold text-sm">
                         <p class={isNaN(item.value) ? "text-sm" : ""}>

@@ -1,7 +1,6 @@
 <script lang="ts">
     import Tooltip, { Wrapper } from "@smui/tooltip";
     import Card, { Content } from "@smui/card";
-
     interface tag {
         text: string;
         description: string;
@@ -25,8 +24,8 @@
                 <Wrapper>
                     <div
                         tabindex="0"
-                        class="rounded h-fit w-fit px-1 bg-red-400 {!styling
-                            ? 'text-white'
+                        class="rounded h-fit w-fit px-1 {!styling
+                            ? 'text-white bg-red-400'
                             : ''} dark:text-black {styling}"
                     >
                         <p class="text-xs shadow-sm select-none">{tag.text}</p>

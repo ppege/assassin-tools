@@ -1,25 +1,13 @@
 <script lang="ts">
-    import type { item } from "./stores";
     import Dialog, { Title, Content, Actions } from "@smui/dialog";
     import Button, { Label } from "@smui/button";
     import Textfield from "@smui/textfield";
     import HelperText from "@smui/textfield/helper-text";
-    import Autocomplete from "@smui-extra/autocomplete";
-
-    import Paper, {
-        Title as PaperTitle,
-        Content as PaperContent,
-    } from "@smui/paper";
+    import CharacterCounter from "@smui/textfield/character-counter";
     import type { MenuComponentDev } from "@smui/menu";
     import Menu from "@smui/menu";
     import { Anchor } from "@smui/menu-surface";
-    import List, {
-        Item,
-        Separator,
-        Text,
-        PrimaryText,
-        SecondaryText,
-    } from "@smui/list";
+    import List, { Item, Text, PrimaryText, SecondaryText } from "@smui/list";
     let menu: MenuComponentDev;
     let anchor: HTMLDivElement;
     let anchorClasses: { [k: string]: boolean } = {};
@@ -32,7 +20,6 @@
     let focused3 = false;
     let value = "";
     let timer: any;
-    let chosenItem: string | undefined = undefined;
     const debounce = () => {
         $inventory = [];
         clearTimeout(timer);
@@ -93,9 +80,15 @@
             bind:value={$code}
             on:keyup={debounce}
             label="Inventory code"
+            input$maxlength={32}
             on:focus={() => (focused2 = true)}
             on:blur={() => (focused2 = false)}
-        />
+        >
+            <svelte:fragment slot="helper">
+                <HelperText>Type anything if you are new</HelperText>
+                <CharacterCounter>0 / 18</CharacterCounter>
+            </svelte:fragment>
+        </Textfield>
     </Content>
     <Actions>
         <Button>
@@ -136,7 +129,7 @@
     }}
     bind:this={anchor}
 >
-    <Button variant="outlined" on:click={() => menu.setOpen(true)}>
+    <Button on:click={() => menu.setOpen(true)}>
         <Label>View Actions</Label>
     </Button>
     <Menu
@@ -152,12 +145,12 @@
                     <SecondaryText>Set the inventory code</SecondaryText>
                 </Text>
             </Item>
-            <Item on:SMUI:action={() => (requestDialog = true)}>
+            <!-- <Item on:SMUI:action={() => (requestDialog = true)}>
                 <Text>
                     <PrimaryText>Trade request</PrimaryText>
                     <SecondaryText>Send a trade request</SecondaryText>
                 </Text>
-            </Item>
+            </Item> -->
             <Item on:SMUI:action={() => (adDialog = true)}>
                 <Text>
                     <PrimaryText>Trade ad</PrimaryText>

@@ -2,6 +2,7 @@
     import Item from "./Item.svelte";
     import { fade } from "svelte/transition";
     import { inventory, code, codeDialog } from "./stores";
+    import ActionsButton from "./Actions.svelte";
     import { getValues } from "./getValues";
     import Paper, { Title } from "@smui/paper";
     import type { SnackbarComponentDev } from "@smui/snackbar";
@@ -15,7 +16,11 @@
 </script>
 
 <Paper class="h-full">
-    <Title>Inventory</Title>
+    <div class="flex flex-row justify-between items-center">
+        <Title>Inventory</Title>
+        <pre class="text-gray-400 text-sm">{$code}</pre>
+        <ActionsButton />
+    </div>
     <div class="flex gap-3 w-full justify-center">
         <Snackbar bind:this={snackbarWithClose}>
             <Label>Inventory saved.</Label>
@@ -40,7 +45,7 @@
     {/if}
     {#if !$code}
         <div
-            class="text-center text-gray-400 mt-40 select-none w-full"
+            class="text-center text-gray-400 select-none w-full h-full flex flex-col items-center justify-center"
             transition:fade={{ duration: 200 }}
         >
             <div class="material-icons text-9xl">search</div>

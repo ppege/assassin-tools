@@ -8,13 +8,13 @@
 
 <body>
     <div class="w-full h-screen max-h-screen flex flex-col lg:flex-row p-1">
-        <div class="flex flex-col gap-1 w-full">
+        <div class="flex flex-col gap-2 w-full">
             <div class="h-[70vh]">
-                <Inventory {codeDialog} />
+                <Inventory />
             </div>
-            <div class="h-auto flex flex-row gap-1">
+            <div class="h-auto flex flex-row">
                 <div class="w-full h-full">
-                    <Stats {codeDialog} />
+                    <Stats />
                 </div>
             </div>
         </div>
