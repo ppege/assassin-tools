@@ -13,6 +13,16 @@
     let anchorClasses: { [k: string]: boolean } = {};
     import { inventory, code, codeDialog } from "./stores";
     import { getValues } from "./getValues";
+    import type { SnackbarComponentDev } from "@smui/snackbar";
+    import Snackbar, {
+        Actions as SnackbarActions,
+        Label as SnackbarLabel,
+    } from "@smui/snackbar";
+    import IconButton from "@smui/icon-button";
+    import DiscordMessage from "./DiscordMessage.svelte";
+    import Checkbox from "@smui/checkbox";
+    let snackbarWithClose: SnackbarComponentDev;
+    let snackbarWithoutClose: SnackbarComponentDev;
     let requestDialog = false;
     let adDialog = false;
     let focused = false;
@@ -31,15 +41,33 @@
     $: generateTradeAd = () => {
         const obj = $inventory
             .filter((obj) => obj.attr.trading)
-            .map(
-                (obj) =>
-                    obj.amount + " " + obj.name + (obj.amount > 1 ? "s" : "")
+            .map((obj) =>
+                obj.amount > 1
+                    ? obj.amount + " "
+                    : "" + obj.name + (obj.amount > 1 ? "s" : "")
             );
-        return obj.join(", ");
+        if (obj.length > 1 && obj.length < 5) {
+            const last = obj.pop();
+            return "**Trading** " + obj.join(", ") + " and " + last;
+        }
+        if (obj.length > 4) {
+            return "**Trading**\n" + obj.join("\n")
+        }
+        return "**Trading** " + obj.join(", ");
     };
     $: ad = generateTradeAd();
+    const copyAd = () => {
+        navigator.clipboard.writeText(ad);
+        snackbarWithClose.open();
+    };
 </script>
 
+<Snackbar bind:this={snackbarWithClose}>
+    <SnackbarLabel>Ad copied!</SnackbarLabel>
+    <SnackbarActions>
+        <IconButton class="material-icons" title="Dismiss">close</IconButton>
+    </SnackbarActions>
+</Snackbar>
 <Dialog
     bind:open={requestDialog}
     aria-labelledby="simple-title"
@@ -103,14 +131,46 @@
 >
     <Title>Generate trade ad</Title>
     <Content>
-        <Textfield
-            textarea
-            value={ad}
-            label="Your trade ad"
-            on:focus={() => (focused3 = true)}
-            on:blur={() => (focused3 = false)}
-        />
+        {#if ad == "**Trading** "}
+            Nothing selected. To select an item, press the <button
+                class="item-button-small text-black hover:bg-green-100 active:bg-green-50"
+                >♻️</button
+            > button on the items you'd like to advertise.
+        {:else}
+            <DiscordMessage data={{ username: $code, message: ad }} />
+        {/if}
     </Content>
+    <Actions>
+        {#if ad != "**Trading** "}
+            <Checkbox
+                on:click={() => {
+                    if (ad.includes(" - PM me!")) {
+                        ad = ad.replace(" - PM me!", "");
+                    } else {
+                        ad = ad + " - PM me!";
+                    }
+                }}
+            />
+            <p class="text-sm text-gray-400 left-0">Add "PM me!"</p>
+            <Checkbox
+                checked
+                on:click={() => {
+                    if (ad.includes("**Trading**")) {
+                        ad = ad.replace("**Trading**", "Trading");
+                    } else {
+                        ad = ad.replace("Trading ", "**Trading** ")
+                    }
+                }}
+            />
+            <p class="text-sm text-gray-400 left-0">Bold "Trading"</p>
+            <Button on:click={copyAd}>
+                <Label>Copy</Label>
+            </Button>
+        {/if}
+        <Button>
+            <Label>OK</Label>
+        </Button>
+    </Actions>
 </Dialog>
 <div
     class={Object.keys(anchorClasses).join(" ")}
