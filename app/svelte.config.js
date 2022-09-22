@@ -10,6 +10,7 @@ const config = {
             assets: "build",
             fallback: null,
         }),
+        prerender: { entries: [] },
 
         // Override http methods in the Todo forms
         methodOverride: {
