@@ -46,14 +46,13 @@
                     ? obj.amount + " "
                     : "" + obj.name + (obj.amount > 1 ? "s" : "")
             );
-        if (obj.length > 1 && obj.length < 5) {
-            const last = obj.pop();
-            return "**Trading** " + obj.join(", ") + " and " + last;
+        if (obj.length > 2 && obj.length < 5) {
+            return "**Trading** " + obj.join(", ");
         }
         if (obj.length > 4) {
-            return "**Trading**\n" + obj.join("\n")
+            return "**Trading** " + obj.join("\n");
         }
-        return "**Trading** " + obj.join(", ");
+        return "**Trading** " + obj.join(" and ");
     };
     $: ad = generateTradeAd();
     const copyAd = () => {
@@ -140,8 +139,8 @@
             <DiscordMessage data={{ username: $code, message: ad }} />
         {/if}
     </Content>
-    <Actions>
-        {#if ad != "**Trading** "}
+    {#if ad != "**Trading** "}
+        <Actions>
             <Checkbox
                 on:click={() => {
                     if (ad.includes(" - PM me!")) {
@@ -155,14 +154,39 @@
             <Checkbox
                 checked
                 on:click={() => {
-                    if (ad.includes("**Trading**")) {
+                    if (ad.includes("**")) {
                         ad = ad.replace("**Trading**", "Trading");
                     } else {
-                        ad = ad.replace("Trading ", "**Trading** ")
+                        ad = ad.replace("Trading", "**Trading**");
                     }
                 }}
             />
             <p class="text-sm text-gray-400 left-0">Bold "Trading"</p>
+            <Checkbox
+                checked={ad.includes("\n")}
+                on:click={() => {
+                    if (ad.includes("\n")) {
+                        if (ad.includes("**")) {
+                            ad = ad.replace("**Trading**\n", "**Trading**");
+                        } else {
+                            ad = ad.replace("Trading\n", "Trading");
+                        }
+                        ad = ad.replace(/\n/g, ", ");
+                    } else {
+                        if (ad.includes("**")) {
+                            ad = ad.replace("**Trading**", "**Trading**\n");
+                        } else {
+                            ad = ad.replace("Trading", "Trading\n");
+                        }
+                        ad = ad.replace(/, /g, "\n");
+                    }
+                }}
+            />
+            <p class="text-sm text-gray-400 left-0">Use newlines</p>
+        </Actions>
+    {/if}
+    <Actions>
+        {#if ad != "**Trading** "}
             <Button on:click={copyAd}>
                 <Label>Copy</Label>
             </Button>
