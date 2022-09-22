@@ -7,6 +7,7 @@
 		"package": "svelte-kit package",
 		"preview": "vite preview",
 		"prepare": "svelte-kit sync && npm run smui-theme-light && npm run smui-theme-dark",
+		"deploy": "node ./gh-pages.js",
 		"smui-theme-light": "smui-theme compile static/smui.css -i src/theme",
 		"smui-theme-dark": "smui-theme compile static/smui-dark.css -i src/theme/dark",
 		"check": "svelte-check --tsconfig ./tsconfig.json",
@@ -29,6 +30,7 @@
 		"@smui/textfield": "^6.1.0",
 		"@smui/tooltip": "^6.1.0",
 		"@sveltejs/adapter-auto": "next",
+		"@sveltejs/adapter-static": "^1.0.0-next.43",
 		"@sveltejs/kit": "next",
 		"@typescript-eslint/eslint-plugin": "^5.27.0",
 		"@typescript-eslint/parser": "^5.27.0",
@@ -51,6 +53,7 @@
 	"type": "module",
 	"dependencies": {
 		"axios": "^0.27.2",
+		"gh-pages": "^4.0.0",
 		"jquery": "^3.6.0",
 		"svelte-material-ui": "^6.1.3"
 	}

@@ -1,8 +1,16 @@
+<script context="module">
+    export const prerender = true;
+</script>
+
+<svelte:head>
+    <title>Assassin! Tools</title>
+</svelte:head>
+
 <script lang="ts">
-    import Inventory from "./components/Inventory.svelte";
-    import Search from "./components/Search.svelte";
-    import Stats from "./components/Stats.svelte";
-    import Trade from "./components/Trade.svelte";
+    import Inventory from "../components/Inventory.svelte";
+    import Search from "../components/Search.svelte";
+    import Stats from "../components/Stats.svelte";
+    import Trade from "../components/Trade.svelte";
     let codeDialog = false;
 </script>
 
