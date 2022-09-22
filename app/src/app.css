@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+
+.item-button-small {
+    @apply w-auto h-auto px-1 py-[0.12rem] bg-white text-xs rounded border border-slate-300 items-center justify-center hover:bg-gray-700 hover:text-white active:bg-gray-800;
+}
+
+.action-button {
+    @apply rounded px-4 py-1 w-full h-min bg-white outline outline-gray-300 hover:bg-gray-100 active:bg-gray-200;
+}
+
+.default {
+    @apply bg-slate-200 dark:bg-slate-700 dark:text-white;
+}
+
+@tailwind utilities;

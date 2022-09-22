@@ -1,0 +1,248 @@
+<script lang="ts">
+    import Dialog, { Title, Content, Actions } from "@smui/dialog";
+    import Button, { Label } from "@smui/button";
+    import Textfield from "@smui/textfield";
+    import HelperText from "@smui/textfield/helper-text";
+    import CharacterCounter from "@smui/textfield/character-counter";
+    import type { MenuComponentDev } from "@smui/menu";
+    import Menu from "@smui/menu";
+    import { Anchor } from "@smui/menu-surface";
+    import List, { Item, Text, PrimaryText, SecondaryText } from "@smui/list";
+    let menu: MenuComponentDev;
+    let anchor: HTMLDivElement;
+    let anchorClasses: { [k: string]: boolean } = {};
+    import { inventory, code, codeDialog } from "./stores";
+    import { getValues } from "./getValues";
+    import type { SnackbarComponentDev } from "@smui/snackbar";
+    import Snackbar, {
+        Actions as SnackbarActions,
+        Label as SnackbarLabel,
+    } from "@smui/snackbar";
+    import IconButton from "@smui/icon-button";
+    import DiscordMessage from "./DiscordMessage.svelte";
+    import Checkbox from "@smui/checkbox";
+    let snackbarWithClose: SnackbarComponentDev;
+    let snackbarWithoutClose: SnackbarComponentDev;
+    let requestDialog = false;
+    let adDialog = false;
+    let focused = false;
+    let focused2 = false;
+    let focused3 = false;
+    let value = "";
+    let timer: any;
+    const debounce = () => {
+        $inventory = [];
+        clearTimeout(timer);
+        timer = setTimeout(async () => {
+            $inventory = await getValues($code);
+        }, 250);
+    };
+    debounce();
+    $: generateTradeAd = () => {
+        const obj = $inventory
+            .filter((obj) => obj.attr.trading)
+            .map((obj) =>
+                obj.amount > 1
+                    ? obj.amount + " "
+                    : "" + obj.name + (obj.amount > 1 ? "s" : "")
+            );
+        if (obj.length > 2 && obj.length < 5) {
+            return "**Trading** " + obj.join(", ");
+        }
+        if (obj.length > 4) {
+            return "**Trading** " + obj.join("\n");
+        }
+        return "**Trading** " + obj.join(" and ");
+    };
+    $: ad = generateTradeAd();
+    const copyAd = () => {
+        navigator.clipboard.writeText(ad);
+        snackbarWithClose.open();
+    };
+</script>
+
+<Snackbar bind:this={snackbarWithClose}>
+    <SnackbarLabel>Ad copied!</SnackbarLabel>
+    <SnackbarActions>
+        <IconButton class="material-icons" title="Dismiss">close</IconButton>
+    </SnackbarActions>
+</Snackbar>
+<Dialog
+    bind:open={requestDialog}
+    aria-labelledby="simple-title"
+    aria-describedby="simple-content"
+>
+    <Title id="simple-title">Send trade request</Title>
+    <Content>
+        <Textfield
+            type="text"
+            bind:value
+            label="To"
+            on:focus={() => (focused = true)}
+            on:blur={() => (focused = false)}
+        >
+            <HelperText slot="helper">
+                Type the inventory code of the receiver
+            </HelperText>
+        </Textfield>
+    </Content>
+    <Actions>
+        <Button>
+            <Label>Cancel</Label>
+        </Button>
+        <Button>
+            <Label>Next</Label>
+        </Button>
+    </Actions>
+</Dialog>
+<Dialog
+    bind:open={$codeDialog}
+    aria-labelledby="simple-title"
+    aria-describedby="simple-content"
+>
+    <Title>Set inventory code</Title>
+    <Content>
+        <Textfield
+            type="text"
+            bind:value={$code}
+            on:keyup={debounce}
+            label="Inventory code"
+            input$maxlength={32}
+            on:focus={() => (focused2 = true)}
+            on:blur={() => (focused2 = false)}
+        >
+            <svelte:fragment slot="helper">
+                <HelperText>Type anything if you are new</HelperText>
+                <CharacterCounter>0 / 18</CharacterCounter>
+            </svelte:fragment>
+        </Textfield>
+    </Content>
+    <Actions>
+        <Button>
+            <Label>Done</Label>
+        </Button>
+    </Actions>
+</Dialog>
+<Dialog
+    bind:open={adDialog}
+    aria-labelledby="simple-title"
+    aria-describedby="simple-content"
+>
+    <Title>Generate trade ad</Title>
+    <Content>
+        {#if ad == "**Trading** "}
+            Nothing selected. To select an item, press the <button
+                class="item-button-small text-black hover:bg-green-100 active:bg-green-50"
+                >♻️</button
+            > button on the items you'd like to advertise.
+        {:else}
+            <DiscordMessage data={{ username: $code, message: ad }} />
+        {/if}
+    </Content>
+    {#if ad != "**Trading** "}
+        <Actions>
+            <Checkbox
+                on:click={() => {
+                    if (ad.includes(" - PM me!")) {
+                        ad = ad.replace(" - PM me!", "");
+                    } else {
+                        ad = ad + " - PM me!";
+                    }
+                }}
+            />
+            <p class="text-sm text-gray-400 left-0">Add "PM me!"</p>
+            <Checkbox
+                checked
+                on:click={() => {
+                    if (ad.includes("**")) {
+                        ad = ad.replace("**Trading**", "Trading");
+                    } else {
+                        ad = ad.replace("Trading", "**Trading**");
+                    }
+                }}
+            />
+            <p class="text-sm text-gray-400 left-0">Bold "Trading"</p>
+            <Checkbox
+                checked={ad.includes("\n")}
+                on:click={() => {
+                    if (ad.includes("\n")) {
+                        if (ad.includes("**")) {
+                            ad = ad.replace("**Trading**\n", "**Trading**");
+                        } else {
+                            ad = ad.replace("Trading\n", "Trading");
+                        }
+                        ad = ad.replace(/\n/g, ", ");
+                    } else {
+                        if (ad.includes("**")) {
+                            ad = ad.replace("**Trading**", "**Trading**\n");
+                        } else {
+                            ad = ad.replace("Trading", "Trading\n");
+                        }
+                        ad = ad.replace(/, /g, "\n");
+                    }
+                }}
+            />
+            <p class="text-sm text-gray-400 left-0">Use newlines</p>
+        </Actions>
+    {/if}
+    <Actions>
+        {#if ad != "**Trading** "}
+            <Button on:click={copyAd}>
+                <Label>Copy</Label>
+            </Button>
+        {/if}
+        <Button>
+            <Label>OK</Label>
+        </Button>
+    </Actions>
+</Dialog>
+<div
+    class={Object.keys(anchorClasses).join(" ")}
+    use:Anchor={{
+        addClass: (className) => {
+            if (!anchorClasses[className]) {
+                anchorClasses[className] = true;
+            }
+        },
+        removeClass: (className) => {
+            if (anchorClasses[className]) {
+                delete anchorClasses[className];
+                anchorClasses = anchorClasses;
+            }
+        },
+    }}
+    bind:this={anchor}
+>
+    <Button on:click={() => menu.setOpen(true)}>
+        <Label>View Actions</Label>
+    </Button>
+    <Menu
+        bind:this={menu}
+        anchor={false}
+        bind:anchorElement={anchor}
+        anchorCorner="BOTTOM_LEFT"
+    >
+        <List twoLine>
+            <Item on:SMUI:action={() => ($codeDialog = true)}>
+                <Text>
+                    <PrimaryText>Set code</PrimaryText>
+                    <SecondaryText>Set the inventory code</SecondaryText>
+                </Text>
+            </Item>
+            <!-- <Item on:SMUI:action={() => (requestDialog = true)}>
+                <Text>
+                    <PrimaryText>Trade request</PrimaryText>
+                    <SecondaryText>Send a trade request</SecondaryText>
+                </Text>
+            </Item> -->
+            <Item on:SMUI:action={() => (adDialog = true)}>
+                <Text>
+                    <PrimaryText>Trade ad</PrimaryText>
+                    <SecondaryText
+                        >Generate a trade ad for use in the Assassin! discord</SecondaryText
+                    >
+                </Text>
+            </Item>
+        </List>
+    </Menu>
+</div>
