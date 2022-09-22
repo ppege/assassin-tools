@@ -50,7 +50,7 @@
             return "**Trading** " + obj.join(", ");
         }
         if (obj.length > 4) {
-            return "**Trading** " + obj.join("\n");
+            return "**Trading**\n" + obj.join("\n");
         }
         return "**Trading** " + obj.join(" and ");
     };
