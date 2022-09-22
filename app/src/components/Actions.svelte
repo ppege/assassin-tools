@@ -43,14 +43,21 @@
             .filter((obj) => obj.attr.trading)
             .map((obj) =>
                 obj.amount > 1
-                    ? obj.amount + " "
-                    : "" + obj.name + (obj.amount > 1 ? "s" : "")
+                    ? obj.amount +
+                      " " +
+                      obj.name +
+                      (obj.amount > 1
+                          ? obj.name.slice(-1) == "s"
+                              ? ""
+                              : "s"
+                          : "")
+                    : obj.name
             );
-        if (obj.length > 2 && obj.length < 5) {
+        if ((obj.length > 2 && obj.length < 5) || obj.length > 7) {
             return "**Trading** " + obj.join(", ");
         }
-        if (obj.length > 4) {
-            return "**Trading**\n" + obj.join("\n");
+        if (obj.length > 4 && obj.length < 8) {
+            return "**Trading**\n " + obj.join("\n");
         }
         return "**Trading** " + obj.join(" and ");
     };
@@ -138,6 +145,11 @@
         {:else}
             <DiscordMessage data={{ username: $code, message: ad }} />
         {/if}
+        {#if $inventory.filter((obj) => obj.attr.trading).length > 7}
+            <p class="text-xs mt-1">
+                Newlines not available due to too many items; the limit is 7
+            </p>
+        {/if}
     </Content>
     {#if ad != "**Trading** "}
         <Actions>
@@ -150,7 +162,7 @@
                     }
                 }}
             />
-            <p class="text-sm text-gray-400 left-0">Add "PM me!"</p>
+            <p class="text-sm text-gray-400">Add "PM me!"</p>
             <Checkbox
                 checked
                 on:click={() => {
@@ -161,8 +173,10 @@
                     }
                 }}
             />
-            <p class="text-sm text-gray-400 left-0">Bold "Trading"</p>
+            <p class="text-sm text-gray-400">Bold "Trading"</p>
             <Checkbox
+                disabled={$inventory.filter((obj) => obj.attr.trading).length >
+                    7}
                 checked={ad.includes("\n")}
                 on:click={() => {
                     if (ad.includes("\n")) {
@@ -182,7 +196,7 @@
                     }
                 }}
             />
-            <p class="text-sm text-gray-400 left-0">Use newlines</p>
+            <p class="text-sm text-gray-400">Use newlines</p>
         </Actions>
     {/if}
     <Actions>
