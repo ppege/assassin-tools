@@ -134,7 +134,7 @@
     };
 </script>
 
-<Card class="dark:bg-zinc-900">
+<Card>
     <Dialog
         bind:open
         aria-labelledby="simple-title"
@@ -154,7 +154,7 @@
         </Actions>
     </Dialog>
     <div
-        class="w-full h-auto relative block"
+        class="w-full h-auto relative block dark:bg-zinc-900"
         on:mouseover={handleMouseover}
         on:focus={handleMouseover}
         on:mouseleave={handleMouseleave}
