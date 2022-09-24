@@ -68,7 +68,7 @@
             class="text-center text-gray-400 dark:text-zinc-600 select-none w-full h-full flex flex-col items-center justify-center mt-10"
             transition:fade={{ duration: 200 }}
         >
-            <div class="material-icons text-9xl">search</div>
+            <div class="text-9xl material-icons">search</div>
             <p class="mb-1">No results found.</p>
         </div>
     {/if}
