@@ -22,7 +22,6 @@
     import DiscordMessage from "./DiscordMessage.svelte";
     import Checkbox from "@smui/checkbox";
     let snackbarWithClose: SnackbarComponentDev;
-    let snackbarWithoutClose: SnackbarComponentDev;
     let requestDialog = false;
     let adDialog = false;
     let focused = false;

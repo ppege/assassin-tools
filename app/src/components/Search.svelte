@@ -59,16 +59,17 @@
             transition:fade={{ duration: 200 }}
         >
             {#each results as item}
-                <Item {item} context="search" />
+                <Item {item} snackbarWithClose={undefined} context="search" />
             {/each}
         </div>
     {/if}
     {#if noResults && query}
-        <h1
-            class="text-slate-400 font-bold z-50 text-2xl text-center mt-5"
+        <div
+            class="text-center text-gray-400 dark:text-zinc-600 select-none w-full h-full flex flex-col items-center justify-center mt-10"
             transition:fade={{ duration: 200 }}
         >
-            🔎 No results found 🤷🏼‍♂️
-        </h1>
+            <div class="material-icons text-9xl">search</div>
+            <p class="mb-1">No results found.</p>
+        </div>
     {/if}
 </div>

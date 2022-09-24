@@ -8,11 +8,12 @@
     import Dialog, { Title, Content, Actions } from "@smui/dialog";
     import Button, { Label } from "@smui/button";
     import Checkbox from "@smui/checkbox";
+
     export let context: string;
     export let item: item;
     let visible = false;
     let open = false;
-    export let snackbarWithClose: SnackbarComponentDev;
+    export let snackbarWithClose: SnackbarComponentDev|undefined;
 
     $: image = item.name.toUpperCase().replace(/ /g, "_");
     const colorFromRarity = (rarity: String) => {
@@ -242,7 +243,7 @@
                 <div
                     class="absolute flex flex-col right-1 top-[0.1rem] font-mono font-bold z-[5] text-right"
                 >
-                    <p transition:fade={{ duration: 100 }}>
+                    <p class="dark:text-zinc-300" transition:fade={{ duration: 100 }}>
                         {item.amount}
                     </p>
                     {#if visible}
