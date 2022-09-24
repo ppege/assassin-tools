@@ -14,6 +14,12 @@
         results = await fetch(
             `https://api.nangurepo.com/v2/assassin?limit=50&name=${query}`
         ).then((x) => x.json());
+        for (const obj of results) {
+            obj.attr = {
+                trading: false,
+                favorite: false
+            }
+        }
         if (!results.length) {
             noResults = true;
         }
