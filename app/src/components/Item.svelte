@@ -52,7 +52,7 @@
         clearTimeout(timer);
         timer = setTimeout(async () => {
             func();
-        }, 2000);
+        }, 1500);
     };
     const announceSaved = () => {
         snackbarWithClose.open();
@@ -61,16 +61,18 @@
         }, 3000);
     };
     const save = async () => {
-        const names = $inventory.map((obj) => obj.name);
-        for (const obj of $inventory) {
-            if (obj.amount > 1) {
-                for (let i = 1; i < obj.amount; i++) {
-                    names.push(obj.name);
-                }
-            }
-        }
+        const data = $inventory.map((obj) => {
+            return {
+                name: obj.name,
+                amount: obj.amount,
+                trading: obj.attr.trading,
+                favorite: obj.attr.favorite,
+            };
+        });
         fetch(
-            `https://api.nangurepo.com/v2/assassin?code=${$code}&name=${names}`
+            `https://api.nangurepo.com/v2/assassin?code=${$code}&data=${JSON.stringify(
+                data
+            )}`
         ).then(async () => {
             if ($inventory.length > 1) {
                 $inventory = await getValues($code);
@@ -128,6 +130,7 @@
         } else {
             $inventory[index].attr.trading = !$inventory[index].attr.trading;
         }
+        debounce(save);
     };
 </script>
 
@@ -203,7 +206,9 @@
                         </button>
                     {:else}
                         <div class="flex flex-col">
-                            <p class="text-[0.4rem] font-semibold">{item.obtain}</p>
+                            <p class="text-[0.4rem] font-semibold">
+                                {item.obtain}
+                            </p>
                             <p class="text-[0.4rem]">{item.origin}</p>
                         </div>
                     {/if}

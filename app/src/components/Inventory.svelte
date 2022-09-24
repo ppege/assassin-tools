@@ -18,7 +18,11 @@
 <Paper class="h-full">
     <div class="flex flex-row justify-between items-center">
         <Title>Inventory</Title>
-        <pre class="text-gray-400 text-sm">{$code}</pre>
+        <p
+            class="text-gray-400 text-sm font-mono"
+            on:click={() => ($codeDialog = true)}>
+            {$code}
+        </p>
         <ActionsButton />
     </div>
     <div class="flex gap-3 w-full justify-center">
