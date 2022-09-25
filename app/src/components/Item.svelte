@@ -13,7 +13,7 @@
     export let item: item;
     let visible = false;
     let open = false;
-    export let snackbarWithClose: SnackbarComponentDev|undefined;
+    export let snackbarWithClose: SnackbarComponentDev | undefined;
 
     $: image = item.name.toUpperCase().replace(/ /g, "_");
     const colorFromRarity = (rarity: String) => {
@@ -189,18 +189,18 @@
                     {#if context == "inventory"}
                         <button
                             on:click={() => toggle("favorite")}
-                            class="item-button-small text-black hover:bg-yellow-100 active:bg-yellow-50 {item
+                            class="item-button-small favorite-toggle {item
                                 .attr.favorite
-                                ? 'bg-yellow-200'
+                                ? 'favorite-active'
                                 : null}"
                         >
                             ⭐️
                         </button>
                         <button
                             on:click={() => toggle("trading")}
-                            class="item-button-small text-black hover:bg-green-100 active:bg-green-50 {item
+                            class="item-button-small trading-toggle {item
                                 .attr.trading
-                                ? 'bg-green-200'
+                                ? 'trading-active'
                                 : null}"
                         >
                             ♻️
@@ -243,7 +243,10 @@
                 <div
                     class="absolute flex flex-col right-1 top-[0.1rem] font-mono font-bold z-[5] text-right"
                 >
-                    <p class="dark:text-zinc-300" transition:fade={{ duration: 100 }}>
+                    <p
+                        class="dark:text-zinc-300"
+                        transition:fade={{ duration: 100 }}
+                    >
                         {item.amount}
                     </p>
                     {#if visible}
@@ -270,9 +273,9 @@
         )}`}
     >
         <p
-            class={`font-semibold text-center text-white ${
+            class={`font-semibold text-center ${
                 item.name.length >= 12 ? "text-sm py-[2px]" : "text-md"
-            }`}
+            } ${item.rarity == "Dream" ? "text-black" : "text-white"}`}
         >
             {item.name}
         </p>

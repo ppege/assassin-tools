@@ -2,7 +2,23 @@
 @tailwind components;
 
 .item-button-small {
-    @apply w-auto h-auto px-1 py-[0.12rem] bg-white text-xs rounded border border-slate-300 items-center justify-center hover:bg-gray-700 hover:text-white active:bg-gray-800;
+    @apply w-auto h-auto px-1 py-[0.12rem] bg-white text-xs rounded border border-slate-300 items-center justify-center hover:bg-gray-700 hover:text-white active:bg-gray-800 dark:bg-zinc-800 dark:hover:bg-zinc-200 dark:hover:text-black dark:active:bg-zinc-300 dark:text-white !important;
+}
+
+.favorite-toggle {
+    @apply text-black hover:bg-yellow-100 active:bg-yellow-50 dark:hover:bg-yellow-100 dark:active:bg-yellow-50 !important;
+}
+
+.favorite-active {
+    @apply bg-yellow-200 !important;
+}
+
+.trading-toggle {
+    @apply text-black hover:bg-green-100 active:bg-green-50 dark:hover:bg-green-100 dark:active:bg-green-50 !important;
+}
+
+.trading-active {
+    @apply bg-green-200 !important;
 }
 
 .action-button {
