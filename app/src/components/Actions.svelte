@@ -11,7 +11,13 @@
     let menu: MenuComponentDev;
     let anchor: HTMLDivElement;
     let anchorClasses: { [k: string]: boolean } = {};
-    import { inventory, code, codeDialog } from "./stores";
+    import {
+        inventory,
+        code,
+        codeDialog,
+        password,
+        passwordCorrect,
+    } from "./stores";
     import { getValues } from "./getValues";
     import type { SnackbarComponentDev } from "@smui/snackbar";
     import Snackbar, {
@@ -21,6 +27,7 @@
     import IconButton from "@smui/icon-button";
     import DiscordMessage from "./DiscordMessage.svelte";
     import Checkbox from "@smui/checkbox";
+    import axios from "axios";
     let snackbarWithClose: SnackbarComponentDev;
     let requestDialog = false;
     let adDialog = false;
@@ -65,6 +72,20 @@
         navigator.clipboard.writeText(ad);
         snackbarWithClose.open();
     };
+    const verifyCredentials = () => {
+        axios
+            .post("https://api.nangurepo.com/v2/assassin/verify", {
+                code: $code,
+                password: $password,
+            })
+            .then(() => {
+                $passwordCorrect = true;
+            })
+            .catch(() => {
+                $passwordCorrect = false;
+            });
+    };
+    verifyCredentials();
 </script>
 
 <Snackbar bind:this={snackbarWithClose}>
@@ -119,12 +140,27 @@
         >
             <svelte:fragment slot="helper">
                 <HelperText>Type anything if you are new</HelperText>
-                <CharacterCounter>0 / 18</CharacterCounter>
+                <CharacterCounter>0 / 32</CharacterCounter>
+            </svelte:fragment>
+        </Textfield>
+        <Textfield
+            type="password"
+            bind:value={$password}
+            on:keyup={debounce}
+            label="Inventory password"
+            input$maxlength={32}
+            input$minlength={4}
+            on:focus={() => (focused2 = true)}
+            on:blur={() => (focused2 = false)}
+        >
+            <svelte:fragment slot="helper">
+                <HelperText>Type anything if you are new</HelperText>
+                <CharacterCounter>0 / 32</CharacterCounter>
             </svelte:fragment>
         </Textfield>
     </Content>
     <Actions>
-        <Button>
+        <Button on:click={verifyCredentials}>
             <Label>Done</Label>
         </Button>
     </Actions>
