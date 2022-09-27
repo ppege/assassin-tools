@@ -38,6 +38,8 @@ const defaultItem: item = {
 };
 
 export const code = writable(getString("code", ""));
+export const password = writable(getString("password", ""))
+export const passwordCorrect = writable(false)
 export const inventory = writable([defaultItem]);
 export const warn = writable(getString("warn", "true") == "true");
 export const codeDialog = writable(false);
@@ -47,6 +49,11 @@ code.subscribe((value) => {
         localStorage.setItem("code", value);
     }
 });
+password.subscribe((value) => {
+    if (browser) {
+        localStorage.setItem("password", value)
+    }
+})
 warn.subscribe((value) => {
     if (browser) {
         localStorage.setItem("warn", value == true ? "true" : "false");

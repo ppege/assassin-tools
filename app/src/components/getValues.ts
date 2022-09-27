@@ -6,6 +6,9 @@ interface storedItem {
     trading: boolean;
 }
 export const getValues = async (code: string): Promise<item[]> => {
+    if (!code) {
+        return [];
+    }
     const names = await (
         await fetch(`https://api.nangurepo.com/v2/assassin?code=${code}`)
     ).json();

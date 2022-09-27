@@ -1,13 +1,14 @@
 <script lang="ts">
     import { getValues } from "./getValues";
     import { fade } from "svelte/transition";
-    import { inventory, code, warn } from "./stores";
+    import { inventory, code, warn, password, passwordCorrect } from "./stores";
     import type { item } from "./stores";
     import type { SnackbarComponentDev } from "@smui/snackbar";
     import Card from "@smui/card";
     import Dialog, { Title, Content, Actions } from "@smui/dialog";
     import Button, { Label } from "@smui/button";
     import Checkbox from "@smui/checkbox";
+    import axios from "axios";
 
     export let context: string;
     export let item: item;
@@ -70,16 +71,30 @@
                 favorite: obj.attr.favorite,
             };
         });
-        fetch(
-            `https://api.nangurepo.com/v2/assassin?code=${$code}&data=${JSON.stringify(
-                data
-            )}`
-        ).then(async () => {
-            if ($inventory.length > 1) {
-                $inventory = await getValues($code);
-            }
-            announceSaved();
-        });
+        axios
+            .post("https://api.nangurepo.com/v2/assassin", {
+                code: $code,
+                data: {
+                    password: $password,
+                    items: data,
+                },
+            })
+            .then(async () => {
+                if ($inventory.length > 1) {
+                    $inventory = await getValues($code);
+                }
+                announceSaved();
+            })
+            .catch(async (err) => {
+                if (err.response) {
+                    if (err.response.status === 401) {
+                        $passwordCorrect = false;
+                        if ($inventory.length > 1) {
+                            $inventory = await getValues($code);
+                        }
+                    }
+                }
+            });
     };
     const handlePlus = () => {
         const index = getIndex();
@@ -172,36 +187,41 @@
                         {#if item.amount > 1}
                             <button
                                 class="item-button-small text-black"
-                                on:click={handleNuke}>💣</button
+                                on:click={handleNuke}
+                                disabled={!$passwordCorrect}>💣</button
                             >
                         {/if}
                         <button
                             class="item-button-small text-black"
-                            on:click={handleMinus}>-</button
+                            on:click={handleMinus}
+                            disabled={!$passwordCorrect}>-</button
                         >
                     {/if}
                     <button
                         class="item-button-small text-black"
-                        on:click={handlePlus}>+</button
+                        on:click={handlePlus}
+                        disabled={!$passwordCorrect}>+</button
                     >
                 </div>
                 <div class="absolute top-1 flex flex-row gap-[1px] w-10/12">
                     {#if context == "inventory"}
                         <button
                             on:click={() => toggle("favorite")}
-                            class="item-button-small favorite-toggle {item
-                                .attr.favorite
+                            class="item-button-small favorite-toggle {item.attr
+                                .favorite
                                 ? 'favorite-active'
                                 : null}"
+                            disabled={!$passwordCorrect}
                         >
                             ⭐️
                         </button>
                         <button
                             on:click={() => toggle("trading")}
-                            class="item-button-small trading-toggle {item
-                                .attr.trading
+                            class="item-button-small trading-toggle {item.attr
+                                .trading
                                 ? 'trading-active'
                                 : null}"
+                            disabled={!$passwordCorrect}
                         >
                             ♻️
                         </button>
