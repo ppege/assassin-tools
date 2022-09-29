@@ -1,6 +1,10 @@
 @tailwind base;
 @tailwind components;
 
+.trade-section {
+    @apply flex flex-row h-32 gap-2 p-1 shadow-lg outline outline-zinc-300;
+}
+
 .item-button-small {
     @apply w-auto h-auto px-1 py-[0.12rem] bg-white text-xs rounded border border-slate-300 items-center justify-center hover:bg-gray-700 hover:text-white active:bg-gray-800 dark:bg-zinc-800 dark:hover:bg-zinc-200 dark:hover:text-black dark:active:bg-zinc-300 dark:text-white !important;
 }

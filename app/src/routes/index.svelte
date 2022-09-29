@@ -10,6 +10,7 @@
     import Inventory from "../components/Inventory.svelte";
     import Search from "../components/Search.svelte";
     import Stats from "../components/Stats.svelte";
+    import Trade from "../components/Trade.svelte";
 </script>
 
 <body>
@@ -27,6 +28,9 @@
         <div class="flex flex-col w-full">
             <div class="h-1/2">
                 <Search />
+            </div>
+            <div>
+                <Trade/>
             </div>
         </div>
     </div>
