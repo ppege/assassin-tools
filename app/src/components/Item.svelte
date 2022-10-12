@@ -1,8 +1,15 @@
 <script lang="ts">
     import { getValues } from "./getValues";
     import { fade } from "svelte/transition";
-    import { inventory, code, warn, password, passwordCorrect } from "./stores";
-    import type { item } from "./stores";
+    import {
+        inventory,
+        trade,
+        code,
+        warn,
+        password,
+        passwordCorrect,
+    } from "./stores";
+    import type { item, tradeContainer } from "./stores";
     import type { SnackbarComponentDev } from "@smui/snackbar";
     import Card from "@smui/card";
     import Dialog, { Title, Content, Actions } from "@smui/dialog";
@@ -102,7 +109,8 @@
             $inventory[index].amount++;
             debounce(save);
             return;
-        } else if (context == "search") {
+        }
+        if (context == "search") {
             if (index != -1) {
                 $inventory[index].amount++;
                 debounce(save);
@@ -112,6 +120,8 @@
             $inventory = [...$inventory, item];
             save();
             return;
+        }
+        if (context == "trade") {
         }
     };
     const handleMinus = () => {
@@ -148,6 +158,25 @@
         }
         debounce(save);
     };
+    const handleAddTrade = (side: string) => {
+        if (
+            $trade[side as keyof tradeContainer]
+                .map((obj) => obj.name)
+                .includes(item.name)
+        ) {
+            const index = $trade[side as keyof tradeContainer].findIndex(
+                (obj) => obj.name == item.name
+            );
+            $trade[side as keyof tradeContainer][index].amount++;
+            return;
+        }
+        let modifiedItem = {...item};
+        modifiedItem.amount = 1;
+        $trade[side as keyof tradeContainer] = [
+            ...$trade[side as keyof tradeContainer],
+            modifiedItem,
+        ];
+    };
 </script>
 
 <Card>
@@ -183,7 +212,7 @@
                 <div
                     class="absolute z-10 right-1 bottom-1 h-auto flex flex-col gap-[1px]"
                 >
-                    {#if context == "inventory"}
+                    {#if context == "inventory" || context == "trade"}
                         {#if item.amount > 1}
                             <button
                                 class="item-button-small text-black"
@@ -225,6 +254,18 @@
                         >
                             ♻️
                         </button>
+                        <button
+                            class="item-button-small"
+                            on:click={() => handleAddTrade("top")}
+                        >
+                            +↑
+                        </button>
+                        <button
+                            class="item-button-small"
+                            on:click={() => handleAddTrade("bottom")}
+                        >
+                            +↓
+                        </button>
                     {:else}
                         <div class="flex flex-col">
                             <p class="text-[0.4rem] font-semibold">
@@ -258,7 +299,7 @@
                 </div>
             </div>
         {/if}
-        {#if item.amount > 1 && context == "inventory"}
+        {#if item.amount > 1 && (context == "inventory" || context == "trade")}
             {#key item.amount}
                 <div
                     class="absolute flex flex-col right-1 top-[0.1rem] font-mono font-bold z-[5] text-right"

@@ -22,7 +22,7 @@ export type item = {
         trading: boolean;
     };
 };
-const defaultItem: item = {
+export const defaultItem: item = {
     name: "",
     value: "",
     demand: "",
@@ -36,11 +36,21 @@ const defaultItem: item = {
         trading: false,
     },
 };
+export interface tradeContainer {
+    top: item[];
+    bottom: item[];
+}
+const tradeObj: tradeContainer = {
+    top: [],
+    bottom: []
+};
 
 export const code = writable(getString("code", ""));
 export const password = writable(getString("password", ""))
 export const passwordCorrect = writable(false)
 export const inventory = writable([defaultItem]);
+export const trade = writable(tradeObj)
+export const selectedRow = writable("top")
 export const warn = writable(getString("warn", "true") == "true");
 export const codeDialog = writable(false);
 

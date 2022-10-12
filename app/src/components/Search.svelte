@@ -34,7 +34,7 @@
         clearTimeout(timer);
         timer = setTimeout(() => {
             search(query);
-        }, 500);
+        }, 250);
     };
 </script>
 
@@ -55,7 +55,7 @@
     </div>
     {#if results.length}
         <div
-            class="mt-1 flex flex-wrap gap-[0.1rem] overflow-scroll h-[35vh] justify-center"
+            class="mt-1 flex flex-wrap gap-[0.1rem] overflow-scroll h-[25vh] justify-center"
             transition:fade={{ duration: 200 }}
         >
             {#each results as item}

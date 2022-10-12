@@ -2,7 +2,15 @@
 @tailwind components;
 
 .trade-section {
-    @apply flex flex-row h-32 gap-2 p-1 shadow-lg outline outline-zinc-300;
+    @apply flex flex-row h-auto gap-2 p-1 shadow-lg rounded outline outline-zinc-300;
+}
+
+.row-select-button {
+    @apply rounded shadow bg-white text-black dark:bg-black dark:text-white hover:font-bold;
+}
+
+.row-select-button-selected {
+    @apply bg-black text-white dark:bg-white dark:text-black;
 }
 
 .item-button-small {
