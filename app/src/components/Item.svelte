@@ -18,9 +18,11 @@
     import axios from "axios";
 
     export let context: string;
+    export let side: string = "";
     export let item: item;
     let visible = false;
     let open = false;
+    let addedStyles: string;
     export let snackbarWithClose: SnackbarComponentDev | undefined;
 
     $: image = item.name.toUpperCase().replace(/ /g, "_");
@@ -122,32 +124,56 @@
             return;
         }
         if (context == "trade") {
+            item.amount++;
+            $trade = $trade;
         }
     };
     const handleMinus = () => {
-        const index = getIndex();
-        if (item.amount != 1) {
-            $inventory[index].amount--;
+        if (context == "inventory") {
+            const index = getIndex();
+            if (item.amount != 1) {
+                $inventory[index].amount--;
+                debounce(save);
+                return;
+            }
+            $inventory = $inventory.filter((obj) => {
+                return obj.name !== item.name;
+            });
             debounce(save);
-            return;
         }
-        $inventory = $inventory.filter((obj) => {
-            return obj.name !== item.name;
-        });
-        debounce(save);
+        if (context == "trade") {
+            if (item.amount != 1) {
+                item.amount--;
+            } else {
+                $trade[side as keyof tradeContainer] = $trade[
+                    side as keyof tradeContainer
+                ].filter((obj) => obj.name != item.name);
+            }
+            $trade = $trade;
+        }
     };
     const handleNuke = (_: any, confirmed: boolean = false) => {
-        console.log($warn);
         if ($warn) {
             if (!confirmed) {
                 open = true;
                 return;
             }
         }
-        $inventory = $inventory.filter((obj) => {
-            return obj.name !== item.name;
-        });
-        debounce(save);
+        if (context == "inventory") {
+            $inventory = $inventory.filter((obj) => {
+                return obj.name !== item.name;
+            });
+            debounce(save);
+            return;
+        }
+        if (context == "trade") {
+            $trade[side as keyof tradeContainer] = $trade[
+                side as keyof tradeContainer
+            ].filter((obj) => {
+                return obj.name !== item.name;
+            });
+            return;
+        }
     };
     const toggle = (attribute: string) => {
         const index = getIndex();
@@ -170,12 +196,19 @@
             $trade[side as keyof tradeContainer][index].amount++;
             return;
         }
-        let modifiedItem = {...item};
-        modifiedItem.amount = 1;
-        $trade[side as keyof tradeContainer] = [
-            ...$trade[side as keyof tradeContainer],
-            modifiedItem,
-        ];
+        if ($trade[side as keyof tradeContainer].length < 5) {
+            let modifiedItem = { ...item };
+            modifiedItem.amount = 1;
+            $trade[side as keyof tradeContainer] = [
+                ...$trade[side as keyof tradeContainer],
+                modifiedItem,
+            ];
+            return;
+        }
+        addedStyles = "bg-red-300";
+        setTimeout(() => {
+            addedStyles = "";
+        }, 3000);
     };
 </script>
 
@@ -217,19 +250,39 @@
                             <button
                                 class="item-button-small text-black"
                                 on:click={handleNuke}
-                                disabled={!$passwordCorrect}>💣</button
+                                disabled={context == "trade"
+                                    ? false
+                                    : !$passwordCorrect}>💣</button
                             >
                         {/if}
                         <button
                             class="item-button-small text-black"
                             on:click={handleMinus}
-                            disabled={!$passwordCorrect}>-</button
+                            disabled={context == "trade"
+                                ? false
+                                : !$passwordCorrect}>-</button
                         >
+                    {/if}
+                    {#if context == "search"}
+                        <button
+                            class="item-button-small"
+                            on:click={() => handleAddTrade("top")}
+                        >
+                            +↑
+                        </button>
+                        <button
+                            class="item-button-small"
+                            on:click={() => handleAddTrade("bottom")}
+                        >
+                            +↓
+                        </button>
                     {/if}
                     <button
                         class="item-button-small text-black"
                         on:click={handlePlus}
-                        disabled={!$passwordCorrect}>+</button
+                        disabled={context == "trade"
+                            ? false
+                            : !$passwordCorrect}>+</button
                     >
                 </div>
                 <div class="absolute top-1 flex flex-row gap-[1px] w-10/12">
@@ -271,7 +324,9 @@
                             <p class="text-[0.4rem] font-semibold">
                                 {item.obtain}
                             </p>
-                            <p class="text-[0.4rem]">{item.origin}</p>
+                            {#if context == "search"}
+                                <p class="text-[0.4rem]">{item.origin}</p>
+                            {/if}
                         </div>
                     {/if}
                 </div>
@@ -283,11 +338,11 @@
                     {/if}
                     <p class="text-xs">{item.rarity}</p>
                     <div class="font-bold text-sm">
-                        <p class={isNaN(item.value) ? "text-sm" : ""}>
-                            {#if isNaN(item.value)}
+                        <p class={isNaN(Number(item.value)) ? "text-sm" : ""}>
+                            {#if isNaN(Number(item.value))}
                                 {item.value}
                             {/if}
-                            {#if isNaN(item.value) && item.exoticvalue !== "Unknown"}
+                            {#if isNaN(Number(item.value)) && item.exoticvalue !== "Unknown"}
                                 /
                             {/if}
                             {#if item.exoticvalue !== "Unknown"}
@@ -323,8 +378,8 @@
         {/if}
         <img
             on:error={handleImgError}
-            class="w-32 h-auto"
-            src={"images/" + image + ".png"}
+            class="w-32 h-auto transition-colors {addedStyles}"
+            src="images/{image}.png"
             alt="knife"
         />
     </div>
