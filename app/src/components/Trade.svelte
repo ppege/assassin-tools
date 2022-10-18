@@ -1,9 +1,15 @@
 <script lang="ts">
     import { trade } from "./stores";
+    import type { item } from "./stores";
     import Item from "./Item.svelte";
     import Paper, { Content, Title } from "@smui/paper";
     import TradeStat from "./TradeStat.svelte";
-    import { fade } from "svelte/transition";
+    const evaluateTotalAmount = (obj: any) => {
+        return (
+            obj.top.map((obj: item) => obj.amount).reduce((a, b) => a + b, 0) +
+            obj.bottom.map((obj: item) => obj.amount).reduce((a, b) => a + b, 0)
+        );
+    };
     $: count = 0;
     $: evaluateTrade = () => {
         const combinedValues = {
@@ -16,23 +22,25 @@
         };
         const combinedDemand = {
             top: $trade.top
-                .map((obj) =>
-                    obj.demand
-                        .replace(/\u2605/g, "1")
-                        .replace(/\u2606/g, "0")
-                        .split("")
-                        .map(Number)
-                        .reduce((a, b) => a + b, 0)
+                .map(
+                    (obj) =>
+                        obj.demand
+                            .replace(/\u2605/g, "1")
+                            .replace(/\u2606/g, "0")
+                            .split("")
+                            .map(Number)
+                            .reduce((a, b) => a + b, 0) * obj.amount
                 )
                 .reduce((a, b) => a + b, 0),
             bottom: $trade.bottom
-                .map((obj) =>
-                    obj.demand
-                        .replace(/\u2605/g, "1")
-                        .replace(/\u2606/g, "0")
-                        .split("")
-                        .map(Number)
-                        .reduce((a, b) => a + b, 0)
+                .map(
+                    (obj) =>
+                        obj.demand
+                            .replace(/\u2605/g, "1")
+                            .replace(/\u2606/g, "0")
+                            .split("")
+                            .map(Number)
+                            .reduce((a, b) => a + b, 0) * obj.amount
                 )
                 .reduce((a, b) => a + b, 0),
         };
@@ -40,15 +48,15 @@
             top: {
                 value: combinedValues.bottom - combinedValues.top,
                 demand:
-                    combinedDemand.bottom / $trade.bottom.length -
-                    combinedDemand.top / $trade.top.length,
+                    combinedDemand.bottom / evaluateTotalAmount($trade) -
+                    combinedDemand.top / evaluateTotalAmount($trade),
                 eval: combinedValues.top < combinedValues.bottom,
             },
             bottom: {
                 value: combinedValues.top - combinedValues.bottom,
                 demand:
-                    combinedDemand.top / $trade.top.length -
-                    combinedDemand.bottom / $trade.bottom.length,
+                    combinedDemand.top / evaluateTotalAmount($trade) -
+                    combinedDemand.bottom / evaluateTotalAmount($trade),
                 eval: combinedValues.bottom < combinedValues.top,
             },
         };
@@ -94,7 +102,7 @@
                 <button class="item-button-small" on:click={() => count++}
                     >+↓</button
                 >
-                buttons to add some things to the trade. {count > 3
+                buttons to add some items to the trade. {count > 3
                     ? "The example buttons don't do anything. The buttons are in the overlay of each item."
                     : ""}
             </p>
