@@ -14,7 +14,7 @@
 </script>
 
 <body>
-    <div class="w-full h-screen max-h-screen flex flex-col lg:flex-row p-1">
+    <div class="w-full h-screen max-h-screen flex flex-col lg:flex-row p-1 gap-2">
         <div class="flex flex-col gap-2 w-full">
             <div class="h-[70vh]">
                 <Inventory />
@@ -25,7 +25,7 @@
                 </div>
             </div>
         </div>
-        <div class="flex flex-col w-full">
+        <div class="flex flex-col gap-2 w-full">
             <div class="h-1/2">
                 <Search />
             </div>

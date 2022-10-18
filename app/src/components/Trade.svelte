@@ -6,8 +6,8 @@
     import TradeStat from "./TradeStat.svelte";
     const evaluateTotalAmount = (obj: any) => {
         return (
-            obj.top.map((obj: item) => obj.amount).reduce((a, b) => a + b, 0) +
-            obj.bottom.map((obj: item) => obj.amount).reduce((a, b) => a + b, 0)
+            obj.top.map((obj: item) => obj.amount).reduce((a: any, b: any) => a + b, 0) +
+            obj.bottom.map((obj: item) => obj.amount).reduce((a: any, b: any) => a + b, 0)
         );
     };
     $: count = 0;
