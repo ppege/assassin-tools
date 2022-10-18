@@ -38,7 +38,7 @@
     };
 </script>
 
-<div class="p-5 w-full h-auto items-center justify-center">
+<div class="w-full h-auto items-center justify-center">
     <div class="flex justify-center items-center">
         <Paper
             class="flex items-center flex-grow max-w-[600px] p-3 h-12"
@@ -55,7 +55,7 @@
     </div>
     {#if results.length}
         <div
-            class="mt-1 flex flex-wrap gap-[0.1rem] overflow-scroll h-[30vh] justify-center"
+            class="mt-1 flex flex-wrap gap-[0.1rem] {results.length>6?'overflow-scroll h-[30vh]':'h-auto'} justify-center dark:bg-zinc-800 rounded p-1"
             transition:fade={{ duration: 200 }}
         >
             {#each results as item}
@@ -65,7 +65,7 @@
     {/if}
     {#if noResults && query}
         <div
-            class="text-center text-gray-400 dark:text-zinc-600 select-none w-full h-full flex flex-col items-center justify-center mt-10"
+            class="text-center text-gray-400 dark:text-zinc-600 select-none w-full h-full flex flex-col items-center justify-center mt-10 "
             transition:fade={{ duration: 200 }}
         >
             <div class="text-9xl material-icons">search</div>
