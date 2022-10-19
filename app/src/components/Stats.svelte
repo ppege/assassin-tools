@@ -94,8 +94,7 @@
                 .reduce((a, b) => a + b, 0) + " exotics"}
         />
         <StatCard
-            title="Value density"
-            tag={{ text: "?", description: "The average value per knife" }}
+            title="Average value"
             value={valueDensity}
         />
         <StatCard title="Average demand" value={averageDemand} />
