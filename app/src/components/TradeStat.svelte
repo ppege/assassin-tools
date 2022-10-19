@@ -50,4 +50,9 @@
             </p>
         </div>
     {/if}
+    {#if !trade.eval && !trade.value && !trade.demand}
+        <div class="flex rounded p-1 text-white bg-black dark:text-black dark:bg-white w-fit h-auto items-center justify-center text-center">
+            <p class="font-bold">Even!</p>
+        </div>
+    {/if}
 </div>
