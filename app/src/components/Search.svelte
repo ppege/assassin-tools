@@ -42,7 +42,7 @@
     <div class="flex justify-center items-center">
         <Paper
             class="flex items-center flex-grow max-w-[600px] p-3 h-12"
-            elevation={6}
+            elevation={4}
         >
             <Icon class="material-icons">search</Icon>
             <Input

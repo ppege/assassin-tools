@@ -1,10 +1,6 @@
 <script context="module">
-	export const prerender = true;
+    export const prerender = true;
 </script>
-
-<svelte:head>
-    <title>Assassin! Tools</title>
-</svelte:head>
 
 <script lang="ts">
     import Inventory from "../components/Inventory.svelte";
@@ -13,9 +9,18 @@
     import Trade from "../components/Trade.svelte";
 </script>
 
+<svelte:head>
+    <title>Assassin! Tools</title>
+</svelte:head>
+
 <body>
-    <div class="w-full h-screen max-h-screen flex flex-col lg:flex-row p-2 gap-2">
+    <div
+        class="w-full h-screen max-h-screen flex flex-col lg:flex-row p-2 gap-2"
+    >
         <div class="flex flex-col gap-2 w-full">
+            <div class="lg:hidden">
+                <Search />
+            </div>
             <div class="h-[70vh]">
                 <Inventory />
             </div>
@@ -26,11 +31,11 @@
             </div>
         </div>
         <div class="flex flex-col gap-2 w-full">
-            <div class="h-auto">
+            <div class="h-auto hidden lg:flex">
                 <Search />
             </div>
             <div>
-                <Trade/>
+                <Trade />
             </div>
         </div>
     </div>
