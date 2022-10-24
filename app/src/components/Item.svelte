@@ -210,6 +210,38 @@
             addedStyles = "";
         }, 3000);
     };
+    const handleAmountClick = () => {
+        const input = prompt("New value", String(item.amount));
+        if (isNaN(Number(input))) {
+            alert("Value must be an integer");
+            return;
+        }
+        const difference = Number(input) - item.amount;
+        if (difference > 9999 || difference < -9999) {
+            if (
+                !confirm(
+                    `This may lag as a function will be called ${difference
+                        .toString()
+                        .replace("-", "")} times.`
+                )
+            ) {
+                return;
+            }
+        }
+        if (difference > 0) {
+            for (let i = 0; i < difference; i++) {
+                handlePlus();
+            }
+            return;
+        }
+        if (difference < 0) {
+            for (let i = 0; i > difference; i--) {
+                handleMinus();
+            }
+            return;
+        }
+        return;
+    };
 </script>
 
 <Card>
@@ -354,17 +386,20 @@
                 </div>
             </div>
         {/if}
-        {#if item.amount > 1 && (context == "inventory" || context == "trade")}
+        {#if context == "inventory" || context == "trade"}
             {#key item.amount}
                 <div
                     class="absolute flex flex-col right-1 top-[0.1rem] font-mono font-bold z-[5] text-right"
                 >
-                    <p
-                        class="dark:text-zinc-300"
-                        transition:fade={{ duration: 100 }}
-                    >
-                        {item.amount}
-                    </p>
+                    {#if item.amount > 1 || visible}
+                        <p
+                            class="dark:text-zinc-300"
+                            transition:fade={{ duration: 100 }}
+                            on:click={handleAmountClick}
+                        >
+                            {item.amount}
+                        </p>
+                    {/if}
                     {#if visible}
                         <p
                             class="font-normal text-yellow-500 dark:text-yellow-300 -mt-1"
