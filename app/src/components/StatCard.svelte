@@ -11,7 +11,7 @@
     export let styling: string | null = null;
 </script>
 
-<div class="p-2 outline outline-gray-200 dark:outline-gray-700 rounded shadow-md">
+<div class="p-2 outline outline-1 outline-gray-200 dark:outline-gray-700 rounded shadow-md">
     <p class="text-sm font-medium text-gray-600 dark:text-gray-400">
         {title}
     </p>
