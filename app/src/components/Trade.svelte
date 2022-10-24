@@ -5,6 +5,11 @@
     import Paper, { Content, Title } from "@smui/paper";
     import TradeStat from "./TradeStat.svelte";
     $: count = 0;
+    const totalAmount = (obj: item[]) => {
+        return obj
+            .map((obj) => obj.amount)
+            .reduce((a: number, b: number) => a + b, 0);
+    };
     $: evaluateTrade = () => {
         const combinedValues = {
             top: $trade.top
@@ -42,15 +47,15 @@
             top: {
                 value: combinedValues.bottom - combinedValues.top,
                 demand:
-                    combinedDemand.bottom / $trade.bottom.length -
-                    combinedDemand.top / $trade.top.length,
+                    combinedDemand.bottom / totalAmount($trade.bottom) -
+                    combinedDemand.top / totalAmount($trade.top),
                 eval: combinedValues.top < combinedValues.bottom,
             },
             bottom: {
                 value: combinedValues.top - combinedValues.bottom,
                 demand:
-                    combinedDemand.top / $trade.top.length -
-                    combinedDemand.bottom / $trade.bottom.length,
+                    combinedDemand.top / totalAmount($trade.top) -
+                    combinedDemand.bottom / totalAmount($trade.bottom),
                 eval: combinedValues.bottom < combinedValues.top,
             },
         };
