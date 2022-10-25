@@ -135,6 +135,12 @@
                 $inventory[index].amount--;
                 debounce(save);
                 return;
+            } else {
+                if (item.attr.favorite) {
+                    if (!confirm('Delete favorited item?')) {
+                        return;
+                    }
+                }
             }
             $inventory = $inventory.filter((obj) => {
                 return obj.name !== item.name;
@@ -214,6 +220,10 @@
         const input = prompt("New value", String(item.amount));
         if (isNaN(Number(input))) {
             alert("Value must be an integer");
+            return;
+        }
+        if (Number(input) < 0) {
+            alert("Value must be positive")
             return;
         }
         const difference = Number(input) - item.amount;
