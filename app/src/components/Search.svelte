@@ -12,7 +12,7 @@
     $: noResults = false;
     const search = async (query: string) => {
         results = await fetch(
-            `https://api.nangurepo.com/v2/assassin?limit=50&name=${query}`
+            `https://api.nangu.dev/v2/assassin?limit=50&name=${query}`
         ).then((x) => x.json());
         for (const obj of results) {
             obj.attr = {
