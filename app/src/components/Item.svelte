@@ -10,6 +10,7 @@
         passwordCorrect,
     } from "./stores";
     import type { item, tradeContainer } from "./stores";
+    import { save } from "./save";
     import type { SnackbarComponentDev } from "@smui/snackbar";
     import Card from "@smui/card";
     import Dialog, { Title, Content, Actions } from "@smui/dialog";
@@ -59,63 +60,30 @@
         });
     };
     let timer: any;
-    const debounce = (func: Function) => {
+    const debounce = async () => {
         clearTimeout(timer);
         timer = setTimeout(async () => {
-            func();
+            await save();
+            announceSaved();
         }, 1500);
     };
     const announceSaved = () => {
-        snackbarWithClose.open();
+        snackbarWithClose?.open();
         setTimeout(() => {
-            snackbarWithClose.close();
+            snackbarWithClose?.close();
         }, 3000);
-    };
-    const save = async () => {
-        const data = $inventory.map((obj) => {
-            return {
-                name: obj.name,
-                amount: obj.amount,
-                trading: obj.attr.trading,
-                favorite: obj.attr.favorite,
-            };
-        });
-        axios
-            .post("https://api.nangurepo.com/v2/assassin", {
-                code: $code,
-                data: {
-                    password: $password,
-                    items: data,
-                },
-            })
-            .then(async () => {
-                if ($inventory.length > 1) {
-                    $inventory = await getValues($code);
-                }
-                announceSaved();
-            })
-            .catch(async (err) => {
-                if (err.response) {
-                    if (err.response.status === 401) {
-                        $passwordCorrect = false;
-                        if ($inventory.length > 1) {
-                            $inventory = await getValues($code);
-                        }
-                    }
-                }
-            });
     };
     const handlePlus = () => {
         const index = getIndex();
         if (context == "inventory") {
             $inventory[index].amount++;
-            debounce(save);
+            debounce();
             return;
         }
         if (context == "search") {
             if (index != -1) {
                 $inventory[index].amount++;
-                debounce(save);
+                debounce();
                 return;
             }
             item.amount = 1;
@@ -133,11 +101,11 @@
             const index = getIndex();
             if (item.amount != 1) {
                 $inventory[index].amount--;
-                debounce(save);
+                debounce();
                 return;
             } else {
                 if (item.attr.favorite) {
-                    if (!confirm('Delete favorited item?')) {
+                    if (!confirm("Delete favorited item?")) {
                         return;
                     }
                 }
@@ -145,7 +113,7 @@
             $inventory = $inventory.filter((obj) => {
                 return obj.name !== item.name;
             });
-            debounce(save);
+            debounce();
         }
         if (context == "trade") {
             if (item.amount != 1) {
@@ -169,7 +137,7 @@
             $inventory = $inventory.filter((obj) => {
                 return obj.name !== item.name;
             });
-            debounce(save);
+            debounce();
             return;
         }
         if (context == "trade") {
@@ -223,7 +191,7 @@
             return;
         }
         if (Number(input) < 0) {
-            alert("Value must be positive")
+            alert("Value must be positive");
             return;
         }
         const difference = Number(input) - item.amount;

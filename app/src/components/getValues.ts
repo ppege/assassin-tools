@@ -10,11 +10,11 @@ export const getValues = async (code: string): Promise<item[]> => {
         return [];
     }
     const names = await (
-        await fetch(`https://api.nangurepo.com/v2/assassin?code=${code}`)
+        await fetch(`https://api.nangu.dev/v2/assassin?code=${code}`)
     ).json();
     const data = await (
         await fetch(
-            `https://api.nangurepo.com/v2/assassin?limit=1&name=${names.map(
+            `https://api.nangu.dev/v2/assassin?limit=1&name=${names.map(
                 (obj: storedItem) => obj.name
             )}`
         )

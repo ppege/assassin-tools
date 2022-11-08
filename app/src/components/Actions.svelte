@@ -74,7 +74,7 @@
     };
     const verifyCredentials = () => {
         axios
-            .post("https://api.nangurepo.com/v2/assassin/verify", {
+            .post("https://api.nangu.dev/v2/assassin/verify", {
                 code: $code,
                 password: $password,
             })
