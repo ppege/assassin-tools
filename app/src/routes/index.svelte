@@ -19,6 +19,9 @@
         class="w-full h-screen max-h-screen flex flex-col lg:flex-row p-2 gap-2"
     >
         <div class="flex flex-col gap-2 w-full">
+            <div class="xl:fixed xl:top-1 xl:right-2">
+                <Credit/>
+            </div>
             <div class="lg:hidden">
                 <Search />
             </div>
@@ -37,9 +40,6 @@
             </div>
             <div>
                 <Trade />
-            </div>
-            <div class="xl:fixed xl:bottom-1 xl:right-1">
-                <Credit/>
             </div>
         </div>
     </div>
