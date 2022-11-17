@@ -331,7 +331,7 @@
                         </button>
                     {:else}
                         <div class="flex flex-col">
-                            <p class="text-[0.4rem] font-semibold">
+                            <p class="{item.obtain.length > 12 ? "text-[0.3rem]":"text-[0.6rem]"} font-semibold">
                                 {item.obtain}
                             </p>
                             {#if context == "search"}
