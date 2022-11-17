@@ -37,11 +37,11 @@
     </div>
     {#if $inventory.length}
         <div
-            class="mt-1 overflow-scroll h-[95%] flex flex-wrap gap-1"
+            class="mt-1 overflow-scroll scrollbar-hide h-[95%] grid grid-cols-2 xs:grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-4 xl:grid-cols-5 gap-1 w-auto p-1"
             transition:fade={{ duration: 200 }}
         >
             {#each $inventory as item}
-                <div class="h-auto w-auto">
+                <div class="h-auto w-full">
                     <Item {item} {snackbarWithClose} context="inventory" />
                 </div>
             {/each}

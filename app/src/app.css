@@ -2,7 +2,7 @@
 @tailwind components;
 
 .trade-section {
-    @apply flex flex-row w-full h-auto gap-2 p-1 shadow-lg rounded outline outline-zinc-300;
+    @apply grid grid-cols-2 xs:grid-cols-3 sm:grid-cols-4 xl:grid-cols-5 w-full h-full gap-2 p-1 shadow-lg rounded outline outline-zinc-300;
 }
 
 .row-select-button {

@@ -156,7 +156,7 @@
         } else {
             $inventory[index].attr.trading = !$inventory[index].attr.trading;
         }
-        debounce(save);
+        debounce();
     };
     const handleAddTrade = (side: string) => {
         if (
@@ -391,7 +391,7 @@
         {/if}
         <img
             on:error={handleImgError}
-            class="w-32 h-auto transition-colors {addedStyles}"
+            class="w-full h-auto transition-colors {addedStyles}"
             src="images/{image}.png"
             alt="knife"
         />
@@ -402,9 +402,11 @@
         )}`}
     >
         <p
-            class={`font-semibold text-center ${
-                item.name.length >= 12 ? "text-sm py-[2px]" : "text-md"
-            } ${item.rarity == "Dream" ? "text-black" : "text-white"}`}
+            class="font-semibold text-center max-h-6 {item.name.length >= 12
+                ? item.name.length >= 18
+                    ? 'text-[0.5rem] py-[6px]'
+                    : 'text-xs py-[4px]'
+                : 'text-md'} {item.rarity == 'Dream' ? 'text-black' : 'text-white'}"
         >
             {item.name}
         </p>
