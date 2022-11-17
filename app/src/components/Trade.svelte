@@ -134,9 +134,8 @@
         <DialogTitle>Apply trade</DialogTitle>
     </div>
     <DialogContent>
-        <p class="underline font-bold">Changes</p>
         <div
-            class="bg-zinc-50 outline outline-gray-200 outline-1 rounded p-3 font-mono w-auto"
+            class="bg-zinc-50 outline outline-gray-200 outline-1 rounded p-3 font-mono w-auto dark:bg-zinc-900 dark:text-white"
         >
             <div class="flex flex-row justify-between gap-5">
                 <p class="font-bold">Name</p>
