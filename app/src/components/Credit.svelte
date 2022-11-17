@@ -1,6 +1,8 @@
-<div
-    class="lg:rounded p-2 bg-zinc-100 shadow-lg outline outline-gray-300 outline-1"
->
+<script lang="ts">
+    import Card, { Content } from "@smui/card";
+</script>
+
+<Card class="p-2">
     <p>
         Powered by
         <a href="https://nangu.dev/" target="_blank" class="hover:underline"
@@ -12,4 +14,4 @@
             class="hover:underline">API</a
         >.
     </p>
-</div>
+</Card>
