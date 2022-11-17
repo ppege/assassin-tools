@@ -55,7 +55,7 @@
     </div>
     {#if results.length}
         <div
-            class="mt-1 flex flex-wrap gap-[0.1rem] {results.length>6?'overflow-scroll h-[30vh]':'h-auto'} justify-center dark:bg-zinc-800 rounded p-1"
+            class="mt-1 grid grid-cols-2 xs:grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-4 xl:grid-cols-5 gap-1 {results.length>6?'overflow-scroll h-[30vh] scrollbar-hide':'h-auto'} justify-center dark:bg-zinc-800 rounded p-1"
             transition:fade={{ duration: 200 }}
         >
             {#each results as item}
