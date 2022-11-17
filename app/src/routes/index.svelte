@@ -7,6 +7,7 @@
     import Search from "../components/Search.svelte";
     import Stats from "../components/Stats.svelte";
     import Trade from "../components/Trade.svelte";
+    import Credit from "../components/Credit.svelte";
 </script>
 
 <svelte:head>
@@ -36,6 +37,9 @@
             </div>
             <div>
                 <Trade />
+            </div>
+            <div class="xl:fixed xl:bottom-1 xl:right-1">
+                <Credit/>
             </div>
         </div>
     </div>
