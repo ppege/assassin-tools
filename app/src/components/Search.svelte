@@ -2,7 +2,6 @@
     import Item from "./Item.svelte";
     import { fade } from "svelte/transition";
     import type { item } from "./stores";
-    import { Input } from "@smui/textfield";
     import Paper from "@smui/paper";
     import Fab from "@smui/fab";
     import { Icon } from "@smui/common";
@@ -17,8 +16,8 @@
         for (const obj of results) {
             obj.attr = {
                 trading: false,
-                favorite: false
-            }
+                favorite: false,
+            };
         }
         if (!results.length) {
             noResults = true;
@@ -45,17 +44,20 @@
             elevation={4}
         >
             <Icon class="material-icons">search</Icon>
-            <Input
+            <input
                 bind:value={query}
                 on:keyup={debounce}
                 placeholder="Search"
-                class="flex-grow ml-2 dark:text-white placeholder:opacity-60"
+                class="flex-grow ml-2 dark:text-white placeholder:opacity-60 !outline-none"
             />
         </Paper>
     </div>
     {#if results.length}
         <div
-            class="mt-1 grid grid-cols-2 xs:grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-4 xl:grid-cols-5 gap-1 {results.length>6?'overflow-scroll h-[30vh] scrollbar-hide':'h-auto'} justify-center dark:bg-zinc-800 rounded p-1"
+            class="mt-1 grid grid-cols-2 xs:grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-4 xl:grid-cols-5 gap-1 {results.length >
+            6
+                ? 'overflow-scroll h-[30vh] scrollbar-hide'
+                : 'h-auto'} justify-center dark:bg-zinc-800 rounded p-1"
             transition:fade={{ duration: 200 }}
         >
             {#each results as item}

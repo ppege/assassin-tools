@@ -19,7 +19,7 @@
         class="w-full h-screen max-h-screen flex flex-col lg:flex-row p-2 gap-2"
     >
         <div class="flex flex-col gap-2 w-full">
-            <div class="xl:fixed xl:top-1 xl:right-2">
+            <div class="fixed top-1 right-2 z-50">
                 <Credit/>
             </div>
             <div class="lg:hidden">
