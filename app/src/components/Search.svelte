@@ -48,7 +48,7 @@
                 bind:value={query}
                 on:keyup={debounce}
                 placeholder="Search"
-                class="flex-grow ml-2 dark:text-white placeholder:opacity-60 !outline-none"
+                class="flex-grow ml-2 dark:text-white bg-black/0 placeholder:opacity-60 !outline-none"
             />
         </Paper>
     </div>
