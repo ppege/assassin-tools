@@ -186,6 +186,9 @@
     };
     const handleAmountClick = () => {
         const input = prompt("New value", String(item.amount));
+        if (input === null) {
+            return;
+        }
         if (isNaN(Number(input))) {
             alert("Value must be an integer");
             return;
