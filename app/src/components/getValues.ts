@@ -18,11 +18,6 @@ export const getValues = async () => {
             )}`
         )
     ).json();
-    console.log(
-        `https://api.nangu.dev/v2/assassin?limit=1&name=${inv.items.map(
-            (obj: storedItem) => obj.name
-        )}`
-    );
     const data = await (
         await fetch(
             `https://api.nangu.dev/v2/assassin?limit=1&name=${inv.items.map(
