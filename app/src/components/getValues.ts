@@ -1,25 +1,39 @@
 import type { item } from "./stores";
+import { get } from "svelte/store";
+import { password, inventory, code } from "./stores";
 interface storedItem {
     amount: number;
     name: string;
     favorite: boolean;
     trading: boolean;
 }
-export const getValues = async (code: string): Promise<item[]> => {
-    if (!code) {
+export const getValues = async () => {
+    if (!get(code)) {
         return [];
     }
-    const names = await (
-        await fetch(`https://api.nangu.dev/v2/assassin?code=${code}`)
+    const inv = await (
+        await fetch(
+            `https://api.nangu.dev/v2/assassin?code=${get(code)}&password=${get(
+                password
+            )}`
+        )
     ).json();
+    console.log(
+        `https://api.nangu.dev/v2/assassin?limit=1&name=${inv.items.map(
+            (obj: storedItem) => obj.name
+        )}`
+    );
     const data = await (
         await fetch(
-            `https://api.nangu.dev/v2/assassin?limit=1&name=${names.map(
+            `https://api.nangu.dev/v2/assassin?limit=1&name=${inv.items.map(
                 (obj: storedItem) => obj.name
             )}`
         )
     ).json();
-    return await fillAttributes(Array.isArray(data) ? data : [], names);
+    inventory.set({
+        items: await fillAttributes(data, inv.items),
+        meta: { private: inv.meta.private },
+    });
 };
 const fillAttributes = async (
     items: item[],

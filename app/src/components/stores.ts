@@ -42,15 +42,18 @@ export interface tradeContainer {
 }
 const tradeObj: tradeContainer = {
     top: [],
-    bottom: []
+    bottom: [],
 };
 
 export const code = writable(getString("code", ""));
-export const password = writable(getString("password", ""))
-export const passwordCorrect = writable(false)
-export const inventory = writable([defaultItem]);
-export const trade = writable(tradeObj)
-export const selectedRow = writable("top")
+export const password = writable(getString("password", ""));
+export const passwordCorrect = writable(false);
+export const inventory = writable({
+    items: [defaultItem],
+    meta: { private: false },
+});
+export const trade = writable(tradeObj);
+export const selectedRow = writable("top");
 export const warn = writable(getString("warn", "true") == "true");
 export const codeDialog = writable(false);
 
@@ -61,9 +64,9 @@ code.subscribe((value) => {
 });
 password.subscribe((value) => {
     if (browser) {
-        localStorage.setItem("password", value)
+        localStorage.setItem("password", value);
     }
-})
+});
 warn.subscribe((value) => {
     if (browser) {
         localStorage.setItem("warn", value == true ? "true" : "false");

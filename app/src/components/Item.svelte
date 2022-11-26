@@ -55,7 +55,7 @@
         image = "DEFAULT";
     };
     const getIndex = () => {
-        return $inventory.findIndex((obj) => {
+        return $inventory.items.findIndex((obj) => {
             return obj.name === item.name;
         });
     };
@@ -76,18 +76,18 @@
     const handlePlus = () => {
         const index = getIndex();
         if (context == "inventory") {
-            $inventory[index].amount++;
+            $inventory.items[index].amount++;
             debounce();
             return;
         }
         if (context == "search") {
             if (index != -1) {
-                $inventory[index].amount++;
+                $inventory.items[index].amount++;
                 debounce();
                 return;
             }
             item.amount = 1;
-            $inventory = [...$inventory, item];
+            $inventory.items = [...$inventory.items, item];
             save();
             return;
         }
@@ -100,7 +100,7 @@
         if (context == "inventory") {
             const index = getIndex();
             if (item.amount != 1) {
-                $inventory[index].amount--;
+                $inventory.items[index].amount--;
                 debounce();
                 return;
             } else {
@@ -110,7 +110,7 @@
                     }
                 }
             }
-            $inventory = $inventory.filter((obj) => {
+            $inventory.items = $inventory.items.filter((obj) => {
                 return obj.name !== item.name;
             });
             debounce();
@@ -134,7 +134,7 @@
             }
         }
         if (context == "inventory") {
-            $inventory = $inventory.filter((obj) => {
+            $inventory.items = $inventory.items.filter((obj) => {
                 return obj.name !== item.name;
             });
             debounce();
@@ -152,9 +152,9 @@
     const toggle = (attribute: string) => {
         const index = getIndex();
         if (attribute == "favorite") {
-            $inventory[index].attr.favorite = !$inventory[index].attr.favorite;
+            $inventory.items[index].attr.favorite = !$inventory.items[index].attr.favorite;
         } else {
-            $inventory[index].attr.trading = !$inventory[index].attr.trading;
+            $inventory.items[index].attr.trading = !$inventory.items[index].attr.trading;
         }
         debounce();
     };

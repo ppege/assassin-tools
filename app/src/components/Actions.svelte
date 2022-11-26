@@ -19,6 +19,7 @@
         passwordCorrect,
     } from "./stores";
     import { getValues } from "./getValues";
+    import { save } from "./save";
     import type { SnackbarComponentDev } from "@smui/snackbar";
     import Snackbar, {
         Actions as SnackbarActions,
@@ -29,23 +30,20 @@
     import Checkbox from "@smui/checkbox";
     import axios from "axios";
     let snackbarWithClose: SnackbarComponentDev;
-    let requestDialog = false;
     let adDialog = false;
-    let focused = false;
-    let focused2 = false;
-    let focused3 = false;
+    let settingsDialog = false;
     let value = "";
     let timer: any;
     const debounce = () => {
-        $inventory = [];
+        $inventory.items = [];
         clearTimeout(timer);
         timer = setTimeout(async () => {
-            $inventory = await getValues($code);
+            await getValues();
         }, 250);
     };
     debounce();
     $: generateTradeAd = () => {
-        const obj = $inventory
+        const obj = $inventory.items
             .filter((obj) => obj.attr.trading)
             .map((obj) =>
                 obj.amount > 1
@@ -95,30 +93,23 @@
     </SnackbarActions>
 </Snackbar>
 <Dialog
-    bind:open={requestDialog}
+    bind:open={settingsDialog}
     aria-labelledby="simple-title"
     aria-describedby="simple-content"
 >
-    <Title id="simple-title">Send trade request</Title>
+    <Title id="simple-title">Settings</Title>
     <Content>
-        <Textfield
-            type="text"
-            bind:value
-            label="To"
-            on:focus={() => (focused = true)}
-            on:blur={() => (focused = false)}
-        >
-            <HelperText slot="helper">
-                Type the inventory code of the receiver
-            </HelperText>
-        </Textfield>
+        <div class="flex flex-row items-center">
+            <Checkbox bind:checked={$inventory.meta.private} />
+            <p class="text-sm text-gray-400">Private</p>
+        </div>
     </Content>
     <Actions>
         <Button>
             <Label>Cancel</Label>
         </Button>
-        <Button>
-            <Label>Next</Label>
+        <Button on:click={save}>
+            <Label>Save</Label>
         </Button>
     </Actions>
 </Dialog>
@@ -135,8 +126,6 @@
             on:keyup={debounce}
             label="Inventory code"
             input$maxlength={32}
-            on:focus={() => (focused2 = true)}
-            on:blur={() => (focused2 = false)}
         >
             <svelte:fragment slot="helper">
                 <HelperText>Type anything if you are new</HelperText>
@@ -150,8 +139,6 @@
             label="Inventory password"
             input$maxlength={32}
             input$minlength={4}
-            on:focus={() => (focused2 = true)}
-            on:blur={() => (focused2 = false)}
         >
             <svelte:fragment slot="helper">
                 <HelperText>Type anything if you are new</HelperText>
@@ -180,7 +167,7 @@
         {:else}
             <DiscordMessage data={{ username: $code, message: ad }} />
         {/if}
-        {#if $inventory.filter((obj) => obj.attr.trading).length > 7}
+        {#if $inventory.items.filter((obj) => obj.attr.trading).length > 7}
             <p class="text-xs mt-1">
                 Newlines not available due to too many items; the limit is 7
             </p>
@@ -210,8 +197,8 @@
             />
             <p class="text-sm text-gray-400">Bold "Trading"</p>
             <Checkbox
-                disabled={$inventory.filter((obj) => obj.attr.trading).length >
-                    7}
+                disabled={$inventory.items.filter((obj) => obj.attr.trading)
+                    .length > 7}
                 checked={ad.includes("\n")}
                 on:click={() => {
                     if (ad.includes("\n")) {
@@ -278,13 +265,19 @@
                     <SecondaryText>Set the inventory code</SecondaryText>
                 </Text>
             </Item>
-            <!-- <Item on:SMUI:action={() => (requestDialog = true)}>
+            <Item
+                on:SMUI:action={() => (settingsDialog = true)}
+                disabled={$inventory.meta.private && !$passwordCorrect}
+            >
                 <Text>
-                    <PrimaryText>Trade request</PrimaryText>
-                    <SecondaryText>Send a trade request</SecondaryText>
+                    <PrimaryText>Settings</PrimaryText>
+                    <SecondaryText>Change your settings</SecondaryText>
                 </Text>
-            </Item> -->
-            <Item on:SMUI:action={() => (adDialog = true)}>
+            </Item>
+            <Item
+                on:SMUI:action={() => (adDialog = true)}
+                disabled={$inventory.meta.private && !$passwordCorrect}
+            >
                 <Text>
                     <PrimaryText>Trade ad</PrimaryText>
                     <SecondaryText

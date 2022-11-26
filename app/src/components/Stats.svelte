@@ -12,28 +12,28 @@
         demand.split("").forEach((char) => {
             arr.push(char == "\u2605" ? 1 : 0);
         });
-        return arr.reduce((a, b) => a + b);
+        return arr.reduce((a, b) => a + b, 0);
     };
-    $: averageDemand = $inventory.length
+    $: averageDemand = $inventory.items.length
         ? (
-              $inventory
+              $inventory.items
                   .map((obj) => {
                       return getDemandNumber(obj.demand) * obj.amount;
                   })
                   .reduce((a, b) => a + b) /
-              $inventory.map((obj) => obj.amount).reduce((a, b) => a + b)
+              $inventory.items.map((obj) => obj.amount).reduce((a, b) => a + b)
           ).toFixed(3)
         : 0;
-    $: valueDensity = $inventory.length
+    $: valueDensity = $inventory.items.length
         ? (
-              $inventory
+              $inventory.items
                   .map((obj) => {
                       return typeof obj.exoticvalue == "number"
                           ? obj.exoticvalue * obj.amount
                           : 0;
                   })
                   .reduce((a, b) => a + b, 0) /
-              $inventory.map((obj) => obj.amount).reduce((a, b) => a + b)
+              $inventory.items.map((obj) => obj.amount).reduce((a, b) => a + b)
           ).toFixed(3)
         : 0;
     $: getTradability = (): tradability => {
@@ -85,7 +85,7 @@
     <Content class="flex flex-wrap gap-2 max-h-fit mt-4">
         <StatCard
             title="Total value"
-            value={$inventory
+            value={$inventory.items
                 .map((obj) => {
                     return typeof obj.exoticvalue == "number"
                         ? obj.exoticvalue * obj.amount
@@ -105,9 +105,9 @@
                 description:
                     "Only counts demand of exotics, mythics and dreams",
             }}
-            value={$inventory.length
+            value={$inventory.items.length
                 ? (
-                      $inventory
+                      $inventory.items
                           .map((obj) => {
                               return obj.rarity == "Exotic" ||
                                   obj.rarity == "Mythic" ||
@@ -116,7 +116,7 @@
                                   : 0;
                           })
                           .reduce((a, b) => a + b) /
-                      $inventory
+                      $inventory.items
                           .map((obj) =>
                               obj.rarity == "Exotic" ||
                               obj.rarity == "Mythic" ||
@@ -130,7 +130,7 @@
         />
         <StatCard
             title="Item count"
-            value={$inventory
+            value={$inventory.items
                 .map((obj) => {
                     return typeof obj.amount == "number" ? obj.amount : 1;
                 })
@@ -142,7 +142,7 @@
                 text: "unique",
                 description: "Unique items in your inventory - no stacks",
             }}
-            value={$inventory.length}
+            value={$inventory.items.length}
         />
         <StatCard
             title="Tradability"

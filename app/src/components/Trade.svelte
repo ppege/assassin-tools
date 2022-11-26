@@ -84,28 +84,28 @@
     let top: boolean = true;
     const applyTrade = async () => {
         const getIndex = (item: item) => {
-            return $inventory.findIndex((obj) => {
+            return $inventory.items.findIndex((obj) => {
                 return obj.name === item.name;
             });
         };
         const exit = top ? "top" : "bottom";
         const enter = top ? "bottom" : "top";
         for (let item of $trade[enter]) {
-            if ($inventory.map((obj) => obj.name).includes(item.name)) {
-                $inventory[getIndex(item)].amount += item.amount;
+            if ($inventory.items.map((obj) => obj.name).includes(item.name)) {
+                $inventory.items[getIndex(item)].amount += item.amount;
             } else {
-                $inventory = [...$inventory, item];
+                $inventory.items = [...$inventory.items, item];
             }
         }
         for (let item of $trade[exit]) {
-            if ($inventory.map((obj) => obj.name).includes(item.name)) {
-                if ($inventory[getIndex(item)].amount - item.amount <= 0) {
-                    $inventory = $inventory.filter((obj) => {
+            if ($inventory.items.map((obj) => obj.name).includes(item.name)) {
+                if ($inventory.items[getIndex(item)].amount - item.amount <= 0) {
+                    $inventory.items = $inventory.items.filter((obj) => {
                         return obj.name !== item.name;
                     });
                     continue;
                 }
-                $inventory[getIndex(item)].amount -= item.amount;
+                $inventory.items[getIndex(item)].amount -= item.amount;
             }
         }
         await save();
