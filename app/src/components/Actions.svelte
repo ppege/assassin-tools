@@ -250,7 +250,7 @@
     bind:this={anchor}
 >
     <Button on:click={() => menu.setOpen(true)}>
-        <Label>View Actions</Label>
+        <Label>Actions</Label>
     </Button>
     <Menu
         bind:this={menu}
