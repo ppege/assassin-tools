@@ -52,7 +52,7 @@
             class="text-center text-gray-400 select-none w-full h-full flex flex-col items-center justify-center"
             transition:fade={{ duration: 200 }}
         >
-            <div class="material-icons text-9xl">search</div>
+            <div class="material-icons" style="font-size: 8rem; line-height: 1;">search</div>
             <p class="mb-1">You haven't set your inventory code.</p>
             <Button variant="outlined" on:click={() => ($codeDialog = true)}
                 >Set inventory code</Button
@@ -64,7 +64,7 @@
             class="text-center text-gray-400 select-none w-full h-full flex flex-col items-center justify-center"
             transition:fade={{ duration: 200 }}
         >
-            <div class="material-icons text-9xl">visibility_off</div>
+            <div class="material-icons" style="font-size: 8rem; line-height: 1;">visibility_off</div>
             <p class="mb-1">This inventory is private. Enter the password to see it.</p>
         </div>
     {/if}
