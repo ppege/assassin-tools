@@ -1,5 +1,6 @@
 <script lang="ts">
     import Item from "./Item.svelte";
+    import TutorialInfo from "./TutorialInfo.svelte";
     import { fade } from "svelte/transition";
     import type { item } from "./stores";
     import Paper from "@smui/paper";
@@ -38,6 +39,13 @@
 </script>
 
 <div class="w-full h-auto items-center justify-center">
+    <div class="tutorial-step-container">
+        <TutorialInfo
+            title="Search"
+            bodyText="Search through all Assassin items here."
+            step={3}
+        />
+    </div>
     <div class="flex justify-center items-center">
         <Paper
             class="flex items-center flex-grow max-w-[600px] p-3 h-12"

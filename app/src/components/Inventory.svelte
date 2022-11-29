@@ -3,6 +3,7 @@
     import { fade } from "svelte/transition";
     import { inventory, code, codeDialog, passwordCorrect } from "./stores";
     import ActionsButton from "./Actions.svelte";
+    import TutorialInfo from "./TutorialInfo.svelte";
     import { getValues } from "./getValues";
     import Paper, { Title } from "@smui/paper";
     import type { SnackbarComponentDev } from "@smui/snackbar";
@@ -15,12 +16,20 @@
     $inventory.items = [];
 </script>
 
+<div class="tutorial-step-container">
+    <TutorialInfo
+        title="Inventory"
+        bodyText="This is the inventory. Your items will be displayed here once you've set it up."
+        step={1}
+    />
+</div>
 <Paper class="h-full">
     <div class="flex flex-row justify-between items-center">
         <Title>Inventory</Title>
         <p
             class="text-gray-400 text-sm font-mono"
-            on:click={() => ($codeDialog = true)}>
+            on:click={() => ($codeDialog = true)}
+        >
             {$code}
         </p>
         <ActionsButton />
@@ -49,10 +58,15 @@
     {/if}
     {#if !$code}
         <div
-            class="text-center text-gray-400 select-none w-full h-full flex flex-col items-center justify-center"
+            class="text-center text-gray-400 select-none w-full h-full flex flex-col items-center justify-center z-20"
             transition:fade={{ duration: 200 }}
         >
-            <div class="material-icons" style="font-size: 8rem; line-height: 1;">search</div>
+            <div
+                class="material-icons"
+                style="font-size: 8rem; line-height: 1;"
+            >
+                search
+            </div>
             <p class="mb-1">You haven't set your inventory code.</p>
             <Button variant="outlined" on:click={() => ($codeDialog = true)}
                 >Set inventory code</Button
@@ -61,11 +75,18 @@
     {/if}
     {#if $inventory.meta.private && !$passwordCorrect}
         <div
-            class="text-center text-gray-400 select-none w-full h-full flex flex-col items-center justify-center"
+            class="text-center text-gray-400 select-none w-full h-full flex flex-col items-center justify-center z-20"
             transition:fade={{ duration: 200 }}
         >
-            <div class="material-icons" style="font-size: 8rem; line-height: 1;">visibility_off</div>
-            <p class="mb-1">This inventory is private. Enter the password to see it.</p>
+            <div
+                class="material-icons"
+                style="font-size: 8rem; line-height: 1;"
+            >
+                visibility_off
+            </div>
+            <p class="mb-1">
+                This inventory is private. Enter the password to see it.
+            </p>
         </div>
     {/if}
 </Paper>

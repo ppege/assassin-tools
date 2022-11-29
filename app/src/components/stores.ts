@@ -56,6 +56,7 @@ export const trade = writable(tradeObj);
 export const selectedRow = writable("top");
 export const warn = writable(getString("warn", "true") == "true");
 export const codeDialog = writable(false);
+export const tutorialStep = writable(parseInt(getString("tutorialStep", "0")));
 
 code.subscribe((value) => {
     if (browser) {

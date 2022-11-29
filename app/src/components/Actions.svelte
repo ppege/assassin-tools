@@ -267,7 +267,7 @@
             </Item>
             <Item
                 on:SMUI:action={() => (settingsDialog = true)}
-                disabled={$inventory.meta.private && !$passwordCorrect}
+                disabled={!$passwordCorrect}
             >
                 <Text>
                     <PrimaryText>Settings</PrimaryText>

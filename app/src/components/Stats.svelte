@@ -2,6 +2,7 @@
     import { inventory } from "./stores";
     import StatCard from "./StatCard.svelte";
     import Paper, { Title, Content } from "@smui/paper";
+    import TutorialInfo from "./TutorialInfo.svelte";
     interface tradability {
         text: string;
         score: number;
@@ -80,6 +81,9 @@
     };
 </script>
 
+<div class="tutorial-step-container">
+    <TutorialInfo title="Stats" bodyText="These are your stats. It shows practical information like the amount of items, your total value, and how tradable your inventory is." step={2} />
+</div>
 <Paper>
     <Title>Stats</Title>
     <Content class="flex flex-wrap gap-2 max-h-fit mt-4">
@@ -93,10 +97,7 @@
                 })
                 .reduce((a, b) => a + b, 0) + " exotics"}
         />
-        <StatCard
-            title="Average value"
-            value={valueDensity}
-        />
+        <StatCard title="Average value" value={valueDensity} />
         <StatCard title="Average demand" value={averageDemand} />
         <StatCard
             title="Average demand"

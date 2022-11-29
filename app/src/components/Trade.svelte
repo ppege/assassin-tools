@@ -9,6 +9,7 @@
     import type { item, tradeContainer } from "./stores";
     import { save } from "./save";
     import Item from "./Item.svelte";
+    import TutorialInfo from "./TutorialInfo.svelte";
     import Paper, { Content, Title } from "@smui/paper";
     import Button, { Label } from "@smui/button";
     import Snackbar, {
@@ -99,7 +100,10 @@
         }
         for (let item of $trade[exit]) {
             if ($inventory.items.map((obj) => obj.name).includes(item.name)) {
-                if ($inventory.items[getIndex(item)].amount - item.amount <= 0) {
+                if (
+                    $inventory.items[getIndex(item)].amount - item.amount <=
+                    0
+                ) {
                     $inventory.items = $inventory.items.filter((obj) => {
                         return obj.name !== item.name;
                     });
@@ -118,6 +122,10 @@
     };
     let snackbarWithClose: SnackbarComponentDev;
 </script>
+
+<div class="tutorial-step-container">
+    <TutorialInfo title="Trade" bodyText="This is the trade calculator. See if a trade is worth it or not through the overall difference between each side's total value and demand." step={4} />
+</div>
 
 <Snackbar bind:this={snackbarWithClose}>
     <Label>Trade applied!</Label>
