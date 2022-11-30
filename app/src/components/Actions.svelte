@@ -50,6 +50,14 @@
         }, 250);
     };
     debounce();
+    const debounceVerify = () => {
+        $inventory.items = [];
+        clearTimeout(timer);
+        timer = setTimeout(async () => {
+            await getValues();
+            verifyCredentials();
+        }, 500);
+    }
     const changePassword = () => {
         axios
             .post("https://api.nangu.dev/v2/assassin/changePassword", {
@@ -165,7 +173,7 @@
         <Textfield
             type="password"
             bind:value={$password}
-            on:keyup={debounce}
+            on:keyup={debounceVerify}
             label="Inventory password"
             input$maxlength={32}
             input$minlength={4}
@@ -191,7 +199,7 @@
         </Textfield>
     </Content>
     <Actions>
-        <Button on:click={verifyCredentials}>
+        <Button>
             <Label>Done</Label>
         </Button>
     </Actions>

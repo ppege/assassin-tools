@@ -26,12 +26,17 @@
 <Paper class="h-full">
     <div class="flex flex-row justify-between items-center">
         <Title>Inventory</Title>
-        <p
-            class="text-gray-400 text-sm font-mono"
-            on:click={() => ($codeDialog = true)}
-        >
-            {$code}
-        </p>
+        <div class="flex flex-row">
+            <div class="material-icons text-gray-400">
+                {$code.length ? $passwordCorrect ? "lock_open" : "lock" : ""}
+            </div>
+            <p
+                class="text-gray-400 text-sm font-mono"
+                on:click={() => ($codeDialog = true)}
+            >
+                {$code}
+            </p>
+        </div>
         <ActionsButton />
     </div>
     <div class="flex gap-3 w-full justify-center">
