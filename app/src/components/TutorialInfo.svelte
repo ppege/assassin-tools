@@ -8,7 +8,7 @@
 
 {#if $tutorialStep == step}
     <div
-        class="p-4 rounded-xl outline outline-1 outline-gray-300 shadow-lg bg-white"
+        class="p-4 rounded-xl outline outline-1 outline-gray-300 shadow-lg bg-white dark:bg-zinc-900 dark:text-white"
     >
         <h1 class="text-2xl font-bold">{title}</h1>
         <p class="max-w-[30ch]">{bodyText}</p>

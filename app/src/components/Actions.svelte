@@ -30,10 +30,18 @@
     import Checkbox from "@smui/checkbox";
     import axios from "axios";
     let snackbarWithClose: SnackbarComponentDev;
+    let snackbarWithClose2: SnackbarComponentDev;
     let adDialog = false;
     let settingsDialog = false;
+    let changePasswordDialog = false;
+    let invalidPassword = false;
     let value = "";
     let timer: any;
+    let changePasswordValues = {
+        code: "",
+        oldPassword: "",
+        newPassword: "",
+    };
     const debounce = () => {
         $inventory.items = [];
         clearTimeout(timer);
@@ -42,6 +50,22 @@
         }, 250);
     };
     debounce();
+    const changePassword = () => {
+        axios
+            .post("https://api.nangu.dev/v2/assassin/changePassword", {
+                code: changePasswordValues.code,
+                password: changePasswordValues.oldPassword,
+                newPassword: changePasswordValues.newPassword,
+            })
+            .then(() => {
+                invalidPassword = false;
+                snackbarWithClose2.open();
+            })
+            .catch(()=>{
+                invalidPassword = true;
+                changePasswordDialog = true;
+            });
+    };
     $: generateTradeAd = () => {
         const obj = $inventory.items
             .filter((obj) => obj.attr.trading)
@@ -88,6 +112,12 @@
 
 <Snackbar bind:this={snackbarWithClose}>
     <SnackbarLabel>Ad copied!</SnackbarLabel>
+    <SnackbarActions>
+        <IconButton class="material-icons" title="Dismiss">close</IconButton>
+    </SnackbarActions>
+</Snackbar>
+<Snackbar bind:this={snackbarWithClose2}>
+    <SnackbarLabel>Password changed.</SnackbarLabel>
     <SnackbarActions>
         <IconButton class="material-icons" title="Dismiss">close</IconButton>
     </SnackbarActions>
@@ -141,7 +171,21 @@
             input$minlength={4}
         >
             <svelte:fragment slot="helper">
-                <HelperText>Type anything if you are new</HelperText>
+                <HelperText>
+                    <a
+                        href="/#"
+                        class="!text-red-400 hover:!text-red-500 hover:underline"
+                        on:click={() => {
+                            changePasswordDialog = true;
+                            changePasswordValues.code = $code;
+                            changePasswordValues.oldPassword = $passwordCorrect
+                                ? $password
+                                : "";
+                        }}
+                    >
+                        Change password
+                    </a>
+                </HelperText>
                 <CharacterCounter>0 / 32</CharacterCounter>
             </svelte:fragment>
         </Textfield>
@@ -149,6 +193,44 @@
     <Actions>
         <Button on:click={verifyCredentials}>
             <Label>Done</Label>
+        </Button>
+    </Actions>
+</Dialog>
+<Dialog
+    bind:open={changePasswordDialog}
+    aria-labelledby="simple-title"
+    aria-describedby="simple-content"
+>
+    <Title>Change password</Title>
+    <Content class="flex flex-col">
+        <Textfield
+            type="text"
+            bind:value={changePasswordValues.code}
+            label="Inventory code"
+            input$maxlength={32}
+        />
+        <Textfield
+            type="password"
+            bind:value={changePasswordValues.oldPassword}
+            label="Current password"
+            input$maxlength={32}
+        />
+        {#if invalidPassword}
+            <p class="text-red-400 bold">Invalid password.</p>
+        {/if}
+        <Textfield
+            type="password"
+            bind:value={changePasswordValues.newPassword}
+            label="New password"
+            input$maxlength={32}
+        />
+    </Content>
+    <Actions>
+        <Button>
+            <Label>Back</Label>
+        </Button>
+        <Button on:click={changePassword}>
+            <Label>Change</Label>
         </Button>
     </Actions>
 </Dialog>
@@ -267,7 +349,7 @@
             </Item>
             <Item
                 on:SMUI:action={() => (settingsDialog = true)}
-                disabled={!$passwordCorrect}
+                disabled={!$passwordCorrect || !$code.length}
             >
                 <Text>
                     <PrimaryText>Settings</PrimaryText>
@@ -276,7 +358,8 @@
             </Item>
             <Item
                 on:SMUI:action={() => (adDialog = true)}
-                disabled={$inventory.meta.private && !$passwordCorrect}
+                disabled={($inventory.meta.private && !$passwordCorrect) ||
+                    !$code.length}
             >
                 <Text>
                     <PrimaryText>Trade ad</PrimaryText>
