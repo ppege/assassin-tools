@@ -57,7 +57,7 @@
             await getValues();
             verifyCredentials();
         }, 500);
-    }
+    };
     const changePassword = () => {
         axios
             .post("https://api.nangu.dev/v2/assassin/changePassword", {
@@ -69,10 +69,35 @@
                 invalidPassword = false;
                 snackbarWithClose2.open();
             })
-            .catch(()=>{
+            .catch(() => {
                 invalidPassword = true;
                 changePasswordDialog = true;
             });
+    };
+    const deleteInventory = () => {
+        if (
+            prompt(
+                "Please confirm that you want to PERMANENTLY delete your inventory by entering your inventory code and the password to the inventory, seperated by a space."
+            ) ==
+            $code + " " + $password
+        ) {
+            axios
+                .post("https://api.nangu.dev/v2/assassin/deleteAccount", {
+                    code: $code,
+                    password: $password,
+                })
+                .then(() => {
+                    $inventory.items = [];
+                    $code = "";
+                    $password = "";
+                    $passwordCorrect = false;
+                })
+                .catch(() => {
+                    alert(
+                        "Something went wrong. Please contact me about this, contact details on https://nangu.dev"
+                    );
+                });
+        }
     };
     $: generateTradeAd = () => {
         const obj = $inventory.items
@@ -143,6 +168,9 @@
         </div>
     </Content>
     <Actions>
+        <Button on:click={deleteInventory}>
+            <Label>Delete inventory</Label>
+        </Button>
         <Button>
             <Label>Cancel</Label>
         </Button>
