@@ -90,7 +90,6 @@
                     $inventory.items = [];
                     $code = "";
                     $password = "";
-                    $passwordCorrect = false;
                 })
                 .catch(() => {
                     alert(
